@@ -21,14 +21,12 @@
                 </a>
                 <h3 class="product__name"><?= $product->title; ?></h3>
                 <p class="product__text">
-                    <?php
-                    if (isset($product->description)) {
-                        echo str_replace(PHP_EOL, '<br>', $product->description);
-                    }
-                    ?>
+                    <?php echo str_replace(PHP_EOL, '<br>', $product->description); ?>
                 </p>
                 <p class="product__price">Цена: <?= (float)$product->price; ?> &#8381;</p>
-                <a class="button product__link" href="/?c=cart&a=add&id=<?= $product->getId(); ?>">Добавить в корзину</a>
+                <a class="button product__link" href="/?c=cart&a=add&id=<?= $product->getId(); ?>">
+                    Добавить в корзину
+                </a>
             </div>
 
         <?php endforeach; ?>

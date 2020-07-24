@@ -1,6 +1,6 @@
 <?php
 /**
- * @var array $config [action, pageTitle, buttonTitle]
+ * @var array $config [showId, action, title, button]
  * @var app\models\Product $product
  */
 ?>
@@ -13,7 +13,7 @@
 
 <form class="editor" action="<?= $config['action']; ?>"  method="post">
 
-    <?php if ($config['action'] == '/?c=product&a=update') :?>
+    <?php if ($config['showId']) :?>
         <div class="editor__row">
             <label class="editor__label" for="id">ID: </label>
             <input class="editor__edit" type="text" name="id" id="id" value="<?= $product->getId(); ?>" readonly>
@@ -44,8 +44,8 @@
     </div>
     <div class="editor__row">
         <label class="editor__label" for="images">Список дополнительных изображений: </label>
-        <textarea class="editor__memo" name="images" id="images" rows="5"><?php
-            implode('\n', $product->getImagesToString());
+        <textarea class="editor__memo" name="images" id="images" rows="5"><?=
+            $product->getImagesToString();
             ?></textarea>
     </div>
     <div class="editor__control">

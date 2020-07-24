@@ -55,7 +55,7 @@ function getController()
     }
 
     $controller = CONTROLLER_DEFAULT;
-    if (isset($_GET['c']) and class_exists(getControllerName(ucfirst($_GET['c'])))) {
+    if (!empty($_GET['c']) and class_exists(getControllerName(ucfirst($_GET['c'])))) {
         $controller = getControllerName(ucfirst($_GET['c']));
     }
     return new $controller();
@@ -75,6 +75,6 @@ function getAction(): string
 
 $content = getController()->run(getAction());
 
-if (isset($content)) {
+if (!empty($content)) {
     echo $content;
 }

@@ -25,10 +25,10 @@ class Controller
     protected function changeLocation($location = '') {
         if ($location != '') {
             header("location: {$location}");
-        } elseif (isset($_SERVER['HTTP_REFERER'])) {
-            header("location: {$_SERVER['HTTP_REFERER']}");
-        } else {
+        } elseif (empty($_SERVER['HTTP_REFERER'])) {
             header("location: /");
+        } else {
+            header("location: {$_SERVER['HTTP_REFERER']}");
         }
     }
 
@@ -64,15 +64,55 @@ class Controller
      */
     protected function getId()
     {
-        static $id;
-        if (isset($id)) {
-            return $id;
-        }
         $id = 0;
-        if (isset($_GET['id']) and is_numeric($_GET['id'])) {
+        if (!empty($_GET['id']) and is_numeric($_GET['id'])) {
             $id = (int)$_GET['id'];
         }
         return $id;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getPage()
+    {
+        $page = 1;
+        if (!empty($_GET['page']) and is_numeric($_GET['page'])) {
+            $page = (int)$_GET['page'];
+        }
+        return $page;
+    }
+
+    /**
+     * @param string $paramName
+     * @param string $type
+     * @return mixed
+     */
+    protected function getPostParam(string $paramName, string $type = 'string')
+    {
+        $result = '';
+        if (!empty($_POST[$paramName])) {
+            $result = $_POST[$paramName];
+        }
+        if ($type == 'int') {
+            if (is_numeric($result)) {
+                return (int)$result;
+            }
+            return 0;
+        }
+        if ($type == 'float') {
+            if (is_numeric($result)) {
+                return (float)$result;
+            }
+            return 0;
+        }
+        if ($type == 'array') {
+            if ($list = explode(PHP_EOL, $result)) {
+                return $list;
+            };
+            return [];
+        }
+        return $result;
     }
 
 

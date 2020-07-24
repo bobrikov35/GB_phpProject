@@ -27,11 +27,7 @@
     <div class="product__content">
         <h2 class="product__name"><?= $product->title; ?></h2>
         <p class="product__description">
-            <?php
-            if (isset($product->description)) {
-                echo str_replace(PHP_EOL, '<br>', $product->description);
-            }
-            ?>
+            <?php echo str_replace(PHP_EOL, '<br>', $product->description); ?>
         </p>
         <p class="product__price">Цена: <?= (float)$product->price; ?> &#8381;</p>
         <div class="product__control">

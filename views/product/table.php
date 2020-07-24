@@ -34,11 +34,7 @@
                 <div class="table__name"><?= $product->name; ?></div>
                 <div class="table__title"><?= $product->title; ?></div>
                 <div class="table__description">
-                    <?php
-                    if (isset($product->description)) {
-                        echo str_replace(PHP_EOL, '<br>', $product->description);
-                    }
-                    ?>
+                    <?php echo str_replace(PHP_EOL, '<br>', $product->description); ?>
                 </div>
                 <div class="table__image">
                     <a href="/?c=product&a=single&id=<?= $product->getId(); ?>">
