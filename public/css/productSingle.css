@@ -1,0 +1,71 @@
+@font-face {
+  font-family: "Huntsman";
+  src: url("../fonts/Huntsman.otf");
+}
+@font-face {
+  font-family: "Exo";
+  src: url("../fonts/Exo.otf");
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("../fonts/OpenSans.ttf");
+}
+.product {
+  display: flex;
+  justify-content: space-between;
+}
+.product__image {
+  cursor: pointer;
+  width: 30%;
+  height: 420px;
+  display: flex;
+  justify-content: center;
+  border: 1px solid rgba(225, 225, 225, 0.7);
+  padding: 6px;
+}
+.product__image img {
+  max-width: 96%;
+  object-fit: contain;
+}
+.product__content {
+  width: 66%;
+}
+.product__name {
+  font-size: 32px;
+  margin-bottom: 24px;
+}
+.product__description {
+  margin-bottom: 12px;
+}
+.product__price {
+  color: #6a6747;
+  font-weight: bold;
+}
+.product__control {
+  display: flex;
+  margin-top: 18px;
+}
+.product__button {
+  width: 264px;
+  margin-right: 12px;
+}
+
+.feedback__title {
+  font-size: 26px;
+  margin: 28px 0 16px;
+}
+.feedback__block {
+  border: 1px dashed rgba(225, 225, 225, 0.7);
+  padding: 12px;
+  margin: 12px 0;
+}
+.feedback__name {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+.feedback__comment {
+  text-align: justify;
+  margin-top: 12px;
+}
+
+/*# sourceMappingURL=productSingle.css.map */

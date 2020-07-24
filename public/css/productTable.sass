@@ -1,0 +1,107 @@
+@import var
+
+
+//      1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19  20  21  22
+$row1: "id  img img img img nm  nm  nm  nm  nm  nm  nm  nm  nm  nm  nm  nm  nm  prc prc prc prc"
+$row2: "id  img img img img ttl ttl ttl ttl ttl ttl ttl ttl ttl ttl ttl ttl ttl prc prc prc prc"
+$row3: "id  img img img img dsc dsc dsc dsc dsc dsc dsc dsc dsc dsc dsc dsc dsc ctr ctr ctr ctr"
+
+
+.title
+  display: flex
+  justify-content: space-between
+  align-items: center
+  padding-bottom: 42px
+  &__text
+    font-size: 32px
+
+
+.message
+  font-size: 24px
+  font-weight: 400
+
+
+.table
+  font-size: 18px
+  display: flex
+  flex-wrap: wrap
+  &__row
+    width: $siteWidth
+    border: 1px solid rgba(225, 225, 225, 0.7)
+    display: grid
+    grid-gap: 4px
+    grid-auto-rows: minmax(38px, auto)
+    grid-auto-columns: 4.2%
+    grid-template-areas: $row1 $row2 $row3
+    padding: 4px
+    margin-bottom: 8px
+  &__id,
+  &__name,
+  &__title,
+  &__description,
+  &__image,
+  &__price,
+  &__control
+    border: 1px dashed rgba(225, 225, 225, 0.7)
+    display: flex
+    align-items: center
+    padding: 4px 8px
+  &__id
+    font-weight: bold
+    grid-area: id
+    justify-content: center
+  &__name
+    grid-area: nm
+    max-height: 38px
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
+    justify-content: flex-start
+  &__title
+    grid-area: ttl
+    max-height: 38px
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
+    justify-content: flex-start
+  &__description
+    grid-area: dsc
+    max-height: 106px
+    overflow: hidden
+    justify-content: flex-start
+  &__image
+    grid-area: img
+    justify-content: center
+    padding: 8px
+    & a
+      transition: linear 0.3s
+      overflow: hidden
+      max-width: 88%
+      max-height: 144px
+      background-color: #fff
+      display: flex
+      &:hover
+        filter: brightness(50%)
+      &:hover img
+        transform: scale(1.03)
+      & img
+        transition: linear 0.3s
+        max-width: 96%
+        object-fit: contain
+  &__price
+    grid-area: prc
+    justify-content: center
+  &__control
+    grid-area: ctr
+    justify-content: center
+  &__link
+    color: $btnBGColor
+    font-size: 28px
+    margin-right: 14px
+    &:last-child
+      margin-right: 0
+    &_red
+      color: indianred
+  &__head
+    font-weight: bold
+    justify-content: center

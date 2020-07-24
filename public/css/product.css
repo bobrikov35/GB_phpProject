@@ -1,0 +1,88 @@
+@font-face {
+  font-family: "Huntsman";
+  src: url("../fonts/Huntsman.otf");
+}
+@font-face {
+  font-family: "Exo";
+  src: url("../fonts/Exo.otf");
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("../fonts/OpenSans.ttf");
+}
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 42px;
+}
+.title__text {
+  font-size: 32px;
+}
+
+.message {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 70px;
+  grid-row-gap: 24px;
+}
+
+.product {
+  width: 320px;
+  border: 1px solid rgba(225, 225, 225, 0.7);
+  padding: 12px;
+  margin-bottom: 24px;
+}
+.product__image {
+  transition: linear 0.3s;
+  overflow: hidden;
+  width: 256px;
+  height: 256px;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+  margin: 0 auto 12px;
+}
+.product__image:hover {
+  filter: brightness(50%);
+}
+.product__image:hover img {
+  transform: scale(1.03);
+}
+.product__image img {
+  transition: linear 0.3s;
+  max-width: 96%;
+  object-fit: contain;
+}
+.product__name {
+  height: 48px;
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.product__text {
+  height: 92px;
+  overflow: hidden;
+  font-size: 16px;
+  text-align: justify;
+  margin-bottom: 12px;
+}
+.product__price {
+  color: #6a6747;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: right;
+  padding-right: 12px;
+}
+.product__link {
+  padding: 6px 16px;
+  margin-top: 24px;
+}
+
+/*# sourceMappingURL=product.css.map */

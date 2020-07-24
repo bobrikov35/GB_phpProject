@@ -1,13 +1,11 @@
 @import var
 
+
 *
   box-sizing: border-box
   padding: 0
   margin: 0
 
-a
-  text-decoration: none
-  border: none
 
 body
   +ffOpenSans
@@ -15,17 +13,47 @@ body
   color: $mainColor
   font-size: 16px
 
+h1, h2, h3, h4, h5, h6
+  +ffExo
+
+a
+  text-decoration: none
+  border: none
+
+
+main
+  width: $siteWidth
+  min-height: 600px
+  padding: 72px 0
+  margin: 0 auto
+
+
 .logo
   display: flex
   align-items: center
   &__title
     +ffHuntsman
-    color: #fff
+    color: $textHomeColor
     font-size: 22px
     margin-left: 12px
 
+
+.button
+  height: 36px
+  color: $brandColor
+  font-size: 16px
+  background-color: $btnBGColor
+  display: flex
+  justify-content: center
+  align-items: center
+  padding: 6px 48px
+  &:hover
+    color: #fff
+    background-color: $btnBGHColor
+
+
 .header
-  background: url('../../../public/images/promo.jpg')
+  background: url('../images/promo.jpg')
   border-bottom: 2px solid rgba(255, 255, 255, 0.1)
   display: flex
   align-items: center
@@ -37,12 +65,13 @@ body
     align-items: center
     margin: 0 auto
 
+
 .menu
   height: 100%
   display: flex
   &__item
     height: 100%
-    color: #fff
+    color: $textHomeColor
     border-right: 1px solid rgba(255, 255, 255, 0.1)
     border-left: 1px solid rgba(255, 255, 255, 0.1)
     display: flex
@@ -55,14 +84,9 @@ body
     &:hover
       background: $mainColor
 
-.container
-  width: $siteWidth
-  min-height: 600px
-  padding: 72px 0
-  margin: 0 auto
 
 .footer
-  background: url('../../../public/images/footerback.png')
+  background: url('../images/footerback.png')
   display: flex
   padding-top: 24px
   &__container
@@ -91,11 +115,12 @@ body
     color: $brandColor
     margin-bottom: 12px
     &:hover
-      color: #fff
+      color: $textHomeColor
+
 
 .links
-  color: #fff
-  background: url('../../../public/images/footerback.png')
+  color: $textHomeColor
+  background: url('../images/footerback.png')
   display: flex
   padding: 24px 0
   &__container

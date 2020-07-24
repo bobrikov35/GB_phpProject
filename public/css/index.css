@@ -1,24 +1,19 @@
 @font-face {
   font-family: "Huntsman";
-  src: url("../../../public/fonts/Huntsman.otf");
+  src: url("../fonts/Huntsman.otf");
 }
 @font-face {
   font-family: "Exo";
-  src: url("../../../public/fonts/Exo.otf");
+  src: url("../fonts/Exo.otf");
 }
 @font-face {
   font-family: "Open Sans";
-  src: url("../../../public/fonts/OpenSans.ttf");
+  src: url("../fonts/OpenSans.ttf");
 }
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-}
-
-a {
-  text-decoration: none;
-  border: none;
 }
 
 body {
@@ -28,19 +23,50 @@ body {
   font-size: 16px;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Exo", sans-serif;
+}
+
+a {
+  text-decoration: none;
+  border: none;
+}
+
+main {
+  width: 1100px;
+  min-height: 600px;
+  padding: 72px 0;
+  margin: 0 auto;
+}
+
 .logo {
   display: flex;
   align-items: center;
 }
 .logo__title {
   font-family: "Huntsman", sans-serif;
-  color: #fff;
+  color: white;
   font-size: 22px;
   margin-left: 12px;
 }
 
+.button {
+  height: 36px;
+  color: #e6e09a;
+  font-size: 16px;
+  background-color: #696969;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 48px;
+}
+.button:hover {
+  color: #fff;
+  background-color: #777;
+}
+
 .header {
-  background: url("../../../public/images/promo.jpg");
+  background: url("../images/promo.jpg");
   border-bottom: 2px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
@@ -60,7 +86,7 @@ body {
 }
 .menu__item {
   height: 100%;
-  color: #fff;
+  color: white;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   border-left: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
@@ -77,15 +103,8 @@ body {
   background: #5e5e5e;
 }
 
-.container {
-  width: 1100px;
-  min-height: 600px;
-  padding: 72px 0;
-  margin: 0 auto;
-}
-
 .footer {
-  background: url("../../../public/images/footerback.png");
+  background: url("../images/footerback.png");
   display: flex;
   padding-top: 24px;
 }
@@ -121,12 +140,12 @@ body {
   margin-bottom: 12px;
 }
 .footer__links:hover {
-  color: #fff;
+  color: white;
 }
 
 .links {
-  color: #fff;
-  background: url("../../../public/images/footerback.png");
+  color: white;
+  background: url("../images/footerback.png");
   display: flex;
   padding: 24px 0;
 }
@@ -149,4 +168,4 @@ body {
   text-align: center;
 }
 
-/*# sourceMappingURL=main.css.map */
+/*# sourceMappingURL=index.css.map */
