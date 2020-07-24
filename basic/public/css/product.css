@@ -1,14 +1,14 @@
 @font-face {
   font-family: "Huntsman";
-  src: url("../fonts/Huntsman.otf");
+  src: url("../../../public/fonts/Huntsman.otf");
 }
 @font-face {
   font-family: "Exo";
-  src: url("../fonts/Exo.otf");
+  src: url("../../../public/fonts/Exo.otf");
 }
 @font-face {
   font-family: "Open Sans";
-  src: url("../fonts/OpenSans.ttf");
+  src: url("../../../public/fonts/OpenSans.ttf");
 }
 .product {
   display: flex;

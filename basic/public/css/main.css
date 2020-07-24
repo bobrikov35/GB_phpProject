@@ -1,14 +1,14 @@
 @font-face {
   font-family: "Huntsman";
-  src: url("../fonts/Huntsman.otf");
+  src: url("../../../public/fonts/Huntsman.otf");
 }
 @font-face {
   font-family: "Exo";
-  src: url("../fonts/Exo.otf");
+  src: url("../../../public/fonts/Exo.otf");
 }
 @font-face {
   font-family: "Open Sans";
-  src: url("../fonts/OpenSans.ttf");
+  src: url("../../../public/fonts/OpenSans.ttf");
 }
 * {
   box-sizing: border-box;
@@ -40,7 +40,7 @@ body {
 }
 
 .header {
-  background: url("../images/promo.jpg");
+  background: url("../../../public/images/promo.jpg");
   border-bottom: 2px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
@@ -85,7 +85,7 @@ body {
 }
 
 .footer {
-  background: url("../images/footerback.png");
+  background: url("../../../public/images/footerback.png");
   display: flex;
   padding-top: 24px;
 }
@@ -126,7 +126,7 @@ body {
 
 .links {
   color: #fff;
-  background: url("../images/footerback.png");
+  background: url("../../../public/images/footerback.png");
   display: flex;
   padding: 24px 0;
 }
