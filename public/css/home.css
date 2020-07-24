@@ -1,0 +1,36 @@
+@font-face {
+  font-family: "Huntsman";
+  src: url("../fonts/Huntsman.otf");
+}
+@font-face {
+  font-family: "Exo";
+  src: url("../fonts/Exo.otf");
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("../fonts/OpenSans.ttf");
+}
+.promo {
+  min-height: 792px;
+  background: url("../images/promo.jpg") no-repeat;
+  background-size: cover;
+  background-position-y: -35px;
+  padding-top: 71px;
+  margin-top: -72px;
+}
+.promo__title {
+  font-family: Exo, sans-serif;
+  color: #fff;
+  font-size: 32px;
+  word-spacing: 8px;
+  text-align: center;
+}
+
+.content {
+  display: flex;
+}
+.content__text {
+  text-align: justify;
+}
+
+/*# sourceMappingURL=home.css.map */

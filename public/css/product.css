@@ -1,0 +1,140 @@
+@font-face {
+  font-family: "Huntsman";
+  src: url("../fonts/Huntsman.otf");
+}
+@font-face {
+  font-family: "Exo";
+  src: url("../fonts/Exo.otf");
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("../fonts/OpenSans.ttf");
+}
+.product {
+  display: flex;
+  justify-content: space-between;
+}
+.product__picture {
+  cursor: pointer;
+  width: 30%;
+  height: 420px;
+  display: flex;
+  justify-content: center;
+  border: 1px solid rgba(225, 225, 225, 0.7);
+  padding: 6px;
+}
+.product__picture img {
+  max-width: 96%;
+  object-fit: contain;
+}
+.product__content {
+  width: 66%;
+  display: flex;
+  flex-direction: column;
+}
+.product__name {
+  font-family: "Exo", sans-serif;
+  font-size: 32px;
+  margin-bottom: 24px;
+}
+.product__desc {
+  margin-bottom: 12px;
+}
+.product__price {
+  color: #6a6747;
+  font-weight: bold;
+}
+.product__control {
+  display: flex;
+}
+.product__link {
+  height: 36px;
+  width: 220px;
+  color: #e6e09a;
+  font-size: 16px;
+  background-color: #696969;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 16px;
+  margin-top: 18px;
+  margin-right: 12px;
+}
+.product__link:hover {
+  color: #fff;
+  background-color: #777777;
+}
+
+.feedback__title {
+  font-family: "Exo", sans-serif;
+  font-size: 24px;
+  margin: 30px 0 18px;
+}
+.feedback__block {
+  border: 1px solid rgba(225, 225, 225, 0.7);
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  margin: 12px 0;
+}
+.feedback__name {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+.feedback__text {
+  text-align: justify;
+  margin-top: 12px;
+}
+
+.editor__title {
+  font-family: "Exo", sans-serif;
+  font-size: 32px;
+  text-align: left;
+  margin-bottom: 40px;
+}
+.editor__title span {
+  border-bottom: solid #e6e09a 2px;
+  padding-bottom: 3px;
+}
+.editor__form {
+  display: flex;
+  flex-direction: column;
+}
+.editor__form span {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.editor__label {
+  width: 180px;
+  font-size: 18px;
+  display: inline-block;
+}
+.editor__edit, .editor__memo {
+  width: 720px;
+  font-size: 18px;
+  padding: 6px 12px;
+}
+.editor__control {
+  display: flex;
+}
+.editor__button {
+  cursor: pointer;
+  width: 240px;
+  height: 36px;
+  color: #e6e09a;
+  font-size: 16px;
+  background-color: #696969;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 16px;
+  margin-top: 24px;
+}
+.editor__button:hover {
+  color: #fff;
+  background-color: #777777;
+}
+
+/*# sourceMappingURL=product.css.map */

@@ -1,0 +1,114 @@
+@import var
+
+*
+  box-sizing: border-box
+  padding: 0
+  margin: 0
+
+a
+  text-decoration: none
+  border: none
+
+body
+  +ffOpenSans
+  user-select: none
+  color: $mainColor
+  font-size: 16px
+
+.logo
+  display: flex
+  align-items: center
+  &__title
+    +ffHuntsman
+    color: #fff
+    font-size: 22px
+    margin-left: 12px
+
+.header
+  background: url('../images/promo.jpg')
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1)
+  display: flex
+  align-items: center
+  &__container
+    width: $siteWidth
+    height: 72px
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin: 0 auto
+
+.menu
+  height: 100%
+  display: flex
+  &__item
+    height: 100%
+    color: #fff
+    border-right: 1px solid rgba(255, 255, 255, 0.1)
+    border-left: 1px solid rgba(255, 255, 255, 0.1)
+    display: flex
+    align-items: center
+    padding: 0 24px
+    &:first-child
+      border-left: none
+    &:last-child
+      border-right: none
+    &:hover
+      background: $mainColor
+
+.container
+  width: $siteWidth
+  min-height: 600px
+  padding: 72px 0
+  margin: 0 auto
+
+.footer
+  background: url('../images/footerback.png')
+  display: flex
+  padding-top: 24px
+  &__container
+    width: $siteWidth
+    color: #fff
+    display: flex
+    justify-content: space-between
+    margin: 0 auto
+  &__contacts
+    width: $siteWidth / 2
+    display: flex
+    flex-direction: column
+  &__contact
+    display: flex
+    align-items: center
+    margin-bottom: 12px
+  &__text
+    margin-left: 12px
+  &__nav
+    width: $siteWidth / 2
+    display: flex
+    flex-direction: column
+    align-items: flex-end
+  &__links
+    width: min-content
+    color: $brandColor
+    margin-bottom: 12px
+    &:hover
+      color: #fff
+
+.links
+  color: #fff
+  background: url('../images/footerback.png')
+  display: flex
+  padding: 24px 0
+  &__container
+    width: $siteWidth
+    display: flex
+    flex-direction: column
+    margin: 0 auto
+  &__social
+    border-top: 1px solid rgba(255, 255, 255, 0.1)
+    display: flex
+    justify-content: center
+    padding-top: 24px
+  &__item
+    margin: 0 12px 12px
+  &__copyright
+    text-align: center

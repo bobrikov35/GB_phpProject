@@ -1,0 +1,119 @@
+@import var
+
+.page
+  display: flex
+  justify-content: space-between
+  flex-wrap: wrap
+  &__title
+    display: flex
+    justify-content: space-between
+    align-items: center
+    padding-bottom: 42px
+    & h2
+      +ffExo
+      font-size: 32px
+    & a
+      height: 36px
+      color: $brandColor
+      font-size: 16px
+      text-align: center
+      background-color: $btnBGColor
+      display: flex
+      align-items: center
+      padding: 6px 48px
+      &:hover
+        color: #fff
+        background-color: $btnBGHColor
+  &__message
+    font-size: 24px
+    font-weight: 400
+
+.product-shop
+  width: 29%
+  border: 1px solid rgba(225, 225, 225, 0.7)
+  padding: 12px
+  margin-bottom: 24px
+  &__picture
+    transition: linear 300ms
+    overflow: hidden
+    width: 256px
+    height: 256px
+    background-color: #fff
+    display: flex
+    justify-content: center
+    padding: 8px
+    margin: 0 auto 12px
+    &:hover
+      filter: brightness(50%)
+    &:hover img
+      transform: scale(1.03)
+    & img
+      transition: linear 300ms
+      max-width: 96%
+      object-fit: contain
+  &__name
+    +ffExo
+    height: 48px
+    font-size: 20px
+    text-align: center
+    margin-bottom: 12px
+  &__text
+    font-size: 16px
+    text-align: justify
+    margin-bottom: 12px
+  &__price
+    color: $priceColor
+    font-size: 16px
+    font-weight: bold
+    text-align: right
+    padding-right: 12px
+  &__link
+    height: 36px
+    color: $brandColor
+    font-size: 16px
+    background-color: $btnBGColor
+    display: flex
+    justify-content: center
+    align-items: center
+    padding: 6px 16px
+    margin-top: 24px
+    &:hover
+      color: #fff
+      background-color: $btnBGHColor
+
+.part-content
+  width: inherit
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+  display: block
+
+.table
+  font-size: 18px
+  &__col1
+    width: $siteWidth * 0.06
+    text-align: center
+  &__col2
+    width: $siteWidth * 0.24
+  &__col3, &__col4, &__col5
+    width: $siteWidth * 0.16
+  &__col6
+    width: $siteWidth * 0.10
+    text-align: right
+  &__col7
+    width: $siteWidth * 0.12
+    text-align: center
+  &__link
+    color: $btnBGColor
+    font-size: 22px
+    margin-right: 12px
+    &:last-child
+      margin-right: 0
+    &_red
+      color: indianred
+  & th
+    text-align: center
+    font-weight: bold
+    padding-bottom: 12px
+  & td
+    padding: 6px
