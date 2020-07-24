@@ -1,16 +1,9 @@
-<?php
-/**
-* @var string $styles
-*/
-?>
+<link rel="stylesheet" href="/css/home.css?t=<?= microtime(true).rand() ?>">
 
-<?= $styles ?>
-
-<main class="container">
-
-<div class="promo">
-    <h1 class="promo__title">Новый PhoneBrand это лучший смартфон</h1>
+<div class="title">
+    <h1 class="title__text">Новый PhoneBrand это лучший смартфон</h1>
 </div>
+
 <div class="content">
     <p class="content__text">
         <b>bobrikov.spb@ya.ru : qwerty123 => admin </b><br>
@@ -27,5 +20,3 @@
         rhoncus.
     </p>
 </div>
-
-</main>
