@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 
-class HomeController extends Controller
+class Home extends Controller
 {
 
     protected function default_action()
     {
-        return $this->render('home',
+        return $this->render('home.twig',
             [
-                'title' => 'Главная',
+                'sol' => $this->getSol(),
                 'menu' => $this->getMenu(),
             ]
         );

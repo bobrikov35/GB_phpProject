@@ -2,8 +2,7 @@
 
 namespace app\services;
 
-use \PDO;
-use \PDOStatement;
+use \PDO, \PDOStatement;
 use app\traits\TSingleton;
 
 
@@ -29,7 +28,7 @@ class DB
     /**
      * @return PDO
      */
-    protected function getConnect(): PDO
+    private function getConnect(): PDO
     {
         if (empty($this->connect)) {
             $this->connect = new PDO(
