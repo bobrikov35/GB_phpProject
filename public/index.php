@@ -1,16 +1,10 @@
 <?php
 
-use app\services\Autoloader;
-
-include dirname(__DIR__) . '/services/Autoloader.php';
-
-spl_autoload_register([(new Autoloader()), 'loadClass']);
-
 session_start();
 
+use app\services\{Request, RendererTemplate};
 
-const CONTROLLER_DEFAULT = 'app\controllers\HomeController';
-const ACTION_DEFAULT = 'default';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 
 $_SESSION['login'] = true;
@@ -33,7 +27,7 @@ function isAdmin(): bool
 /**
  * @return bool
  */
-function isLogin(): bool
+function isLogin()
 {
     static $login;
     if (!isset($login)) {
@@ -43,38 +37,16 @@ function isLogin(): bool
 }
 
 
-/**
- * @return mixed
- */
-function getController()
-{
+$request = new Request();
+$controllerName = $request->getController();
 
-    function getControllerName($controller): string
-    {
-        return "app\\controllers\\{$controller}Controller";
+if (class_exists($controllerName)) {
+    $controller = new $controllerName(
+        $request,
+        new RendererTemplate()
+    );
+    $content = $controller->run($request->getAction());
+    if (!empty($content)) {
+        echo $content;
     }
-
-    $controller = CONTROLLER_DEFAULT;
-    if (!empty($_GET['c']) and class_exists(getControllerName(ucfirst($_GET['c'])))) {
-        $controller = getControllerName(ucfirst($_GET['c']));
-    }
-    return new $controller();
-}
-
-/**
- * @return string
- */
-function getAction(): string
-{
-    if (empty($_GET['a'])) {
-        return ACTION_DEFAULT;
-    }
-    return $_GET['a'];
-}
-
-
-$content = getController()->run(getAction());
-
-if (!empty($content)) {
-    echo $content;
 }

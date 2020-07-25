@@ -1,2 +1,4 @@
 /.idea/
 /vendor/
+/public/compilation_cache/
+/composer.phar

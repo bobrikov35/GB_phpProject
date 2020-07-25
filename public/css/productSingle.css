@@ -41,6 +41,10 @@
   color: #6a6747;
   font-weight: bold;
 }
+.product__price i {
+  font-size: 15px;
+  margin-left: 6px;
+}
 .product__control {
   display: flex;
   margin-top: 18px;

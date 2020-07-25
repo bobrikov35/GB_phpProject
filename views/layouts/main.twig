@@ -1,20 +1,13 @@
-<?php
-/**
- * @var string $title
- * @var array $menu
- * @var string $content
- */
-?>
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/index.css?t=<?= microtime(true).rand(); ?>">
-    <title>BRAND: <?= $title ?></title>
+    <link rel="stylesheet" href="/css/index.css?t={{ sol }}">
+    {% block style %}{% endblock %}
+    <title>BRAND: {% block title %}Интернет-магазин{% endblock %}</title>
 </head>
 <body>
 
@@ -27,16 +20,18 @@
                 <h2 class="logo__title">Brand</h2>
             </a>
             <nav class="menu">
-                <?php foreach ($menu as $item) :?>
-                <a class="menu__item" href="<?= $item['link']; ?>"><?= $item['name']; ?></a>
-                <?php endforeach; ?>
+                {% for item in menu %}
+                    <a class="menu__item" href="{{ item.link }}">{{ item.name|raw }}</a>
+                {% endfor %}
             </nav>
         </div>
     </header>
 
+
     <main>
-        <?= $content ?>
+        {% block content %}{% endblock %}
     </main>
+
 
     <footer class="footer">
         <div class="footer__container">
@@ -79,7 +74,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
-<script src="/js/product.js"></script>
+
+{% block jscript %}{% endblock %}
 
 </body>
 </html>

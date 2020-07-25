@@ -102,6 +102,10 @@
   grid-area: prc;
   justify-content: center;
 }
+.table__price i {
+  font-size: 17px;
+  margin-left: 6px;
+}
 .table__control {
   grid-area: ctr;
   justify-content: center;
