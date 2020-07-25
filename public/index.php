@@ -45,7 +45,7 @@ if (class_exists($controllerName)) {
         $request,
         new RendererTemplate()
     );
-    $content = $controller->run($request->getAction());
+    $content = $controller->run();
     if (!empty($content)) {
         echo $content;
     }

@@ -5,7 +5,7 @@ namespace app\controllers;
 use app\services\{Request, IRenderer};
 
 
-class Controller
+abstract class Controller
 {
 
     private const ACTION_DEFAULT = 'default';
@@ -62,22 +62,22 @@ class Controller
     function getMenu(): array
     {
         $menu = [
-            [ 'name' => 'Главная', 'link' => '/?c=home' ],
-            [ 'name' => 'Товары', 'link' => '/?c=product&a=list' ],
+            [ 'name' => 'Главная', 'link' => '/home' ],
+            [ 'name' => 'Товары', 'link' => '/product/list' ],
         ];
         if (isLogin()) {
-            $menu[] = [ 'name' => 'Заказы', 'link' => '/?c=order&a=list' ];
+            $menu[] = [ 'name' => 'Заказы', 'link' => '/order/list' ];
         }
-        $menu[] = [ 'name' => 'Корзина', 'link' => '/?c=cart&a=list' ];
+        $menu[] = [ 'name' => 'Корзина', 'link' => '/cart/list' ];
         if (isAdmin()) {
-            $menu[] = [ 'name' => 'Работа с <br> товарами', 'link' => '/?c=product&a=table' ];
-            $menu[] = [ 'name' => 'Работа с <br> заказами', 'link' => '/?c=order&a=table' ];
+            $menu[] = [ 'name' => 'Работа с <br> товарами', 'link' => '/product/table' ];
+            $menu[] = [ 'name' => 'Работа с <br> заказами', 'link' => '/order/table' ];
         }
         if (isLogin()) {
-            $menu[] = [ 'name' => $this->request->getSession('user')['name'], 'link' => '/?c=account' ];
-            $menu[] = [ 'name' => 'Выйти', 'link' => '/?c=account&a=logout' ];
+            $menu[] = [ 'name' => $this->request->getSession('user')['name'], 'link' => '/user' ];
+            $menu[] = [ 'name' => 'Выйти', 'link' => '/user/logout' ];
         } else {
-            $menu[] = [ 'name' => 'Войти', 'link' => '/?c=account&a=login' ];
+            $menu[] = [ 'name' => 'Войти', 'link' => '/user/login' ];
         }
         return $menu;
     }

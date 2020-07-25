@@ -2,7 +2,7 @@
 
 namespace app\services;
 
-use app\models\Model;
+use app\repositories\Repository;
 
 
 class Paginator
@@ -25,10 +25,10 @@ class Paginator
 
 
     /**
-     * @param Model $model
+     * @param Repository $model
      * @param int $page
      */
-    public function setItems(Model $model, int $page = 1): void
+    public function setItems(Repository $model, int $page = 1): void
     {
         $this->quantity = $model->getQuantityItems();
         $this->items = $model->getItemsOnPage($page, $this->itemsOnPage);
