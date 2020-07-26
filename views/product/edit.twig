@@ -4,17 +4,17 @@
     <link rel="stylesheet" href="/css/productEdit.css?t={{ sol }}">
 {% endblock %}
 
-{% block title %}{{ config.title }}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block content %}
 
     <div class="title">
-        <h2 class="title__text">{{ config.title }}</h2>
+        <h2 class="title__text">{{ title }}</h2>
     </div>
 
-    <form class="editor" action="{{ config.action }}"  method="post">
+    <form class="editor" action="{{ action }}"  method="post">
 
-        {% if config.showId %}
+        {% if showId %}
             <div class="editor__row">
                 <label class="editor__label" for="id">ID: </label>
                 <input class="editor__edit" type="text" name="id" id="id" value="{{ product.id }}" readonly>
@@ -55,7 +55,7 @@
 
         <div class="editor__control">
             <input class="button editor__button" type="reset" value="Очистить">
-            <input class="button editor__button" type="submit" value="{{ config.button }}">
+            <input class="button editor__button" type="submit" value="{{ buttonTitle }}">
         </div>
 
     </form>

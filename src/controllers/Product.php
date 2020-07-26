@@ -2,31 +2,13 @@
 
 namespace app\controllers;
 
-use app\models\Product as MProduct;
+use app\entities\Product as EProduct;
+use app\repositories\Product as RProduct;
+use app\services\Product as SProduct;
 
 
 class Product extends Controller
 {
-
-    /**
-     * @return MProduct|bool
-     */
-    private function getProduct()
-    {
-        if (empty($_POST)) {
-            return false;
-        }
-        $product = new MProduct();
-        $product->setId($this->getId());
-        $product->name = $this->request->getPost('name');
-        $product->title = $this->request->getPost('title');
-        $product->description = $this->request->getPost('description');
-        $product->image = $this->request->getPost('image');
-        $product->price = $this->request->getPost('price', 'float');
-        $product->setImages($this->request->getPost('images', 'array'));
-        return $product;
-    }
-
 
     protected function default_action()
     {
@@ -35,80 +17,62 @@ class Product extends Controller
 
     protected function list_action()
     {
-        $goods = MProduct::getList();
-        return $this->render('product/index.twig',
-            [
-                'sol' => $this->getSol(),
-                'menu' => $this->getMenu(),
-                'goods' => $goods,
-                'count' => count($goods),
-            ]
-        );
+        $config = $this->getConfig();
+        $config['goods'] = (new RProduct())->getList();
+        $config['count'] = count($config['goods']);
+        return $this->render('product/index.twig', $config);
     }
 
     protected function table_action()
     {
-        $goods = MProduct::getList();
-        return $this->render('product/table.twig',
-            [
-                'sol' => $this->getSol(),
-                'menu' => $this->getMenu(),
-                'goods' => $goods,
-                'count' => count($goods),
-            ]
-        );
+        $config = $this->getConfig();
+        $config['goods'] = (new RProduct())->getList();
+        $config['count'] = count($config['goods']);
+        return $this->render('product/table.twig', $config);
     }
 
+    /**
+     * @return mixed|void
+     */
     protected function single_action()
     {
-        $product = MProduct::getSingle($this->getId());
-        if (!$product) {
-            $this->changeLocation('/?c=product&a=list');
-            return false;
+        $config = $this->getConfig();
+        $config['product'] = (new RProduct())->getSingle($this->getId());
+        if (empty($config['product'])) {
+            $this->changeLocation('/product/list');
+            return;
         }
-        return $this->render('product/single.twig',
-            [
-                'sol' => $this->getSol(),
-                'menu' => $this->getMenu(),
-                'product' => $product,
-            ]
-        );
+        return $this->render('product/single.twig', $config);
     }
 
+
+    private function checkRequiredParams(): bool
+    {
+        return !empty($this->request->getPost('name'))
+            and !empty($this->request->getPost('title'));
+    }
 
     /**
      * @return mixed|void
      */
     public function create_action()
     {
-        $config = [
-            'showId' => false,
-            'action' => '/?c=product&a=create',
-            'title' => 'Добавление товара',
-            'button' => 'Добавить',
-        ];
-        if (!$product = $this->getProduct()) {
-            return $this->render('product/edit.twig',
-                [
-                    'config' => $config,
-                    'sol' => $this->getSol(),
-                    'menu' => $this->getMenu(),
-                    'product' => new MProduct(),
-                ]
-            );
+        $config = $this->getConfig();
+        $config['action'] = '/product/create';
+        $config['title'] = 'Добавление товара';
+        $config['buttonTitle'] = 'Добавить';
+        $config['showId'] = false;
+        if (empty($this->request->getPost())) {
+            $config['product'] = new EProduct();
+            return $this->render('product/edit.twig', $config);
         }
-        if ($product->name == '' or $product->title == '' or !$id = $product->save()) {
-            return $this->render('product/edit.twig',
-                [
-                    'config' => $config,
-                    'sol' => $this->getSol(),
-                    'menu' => $this->getMenu(),
-                    'product' => $product,
-                ]
-            );
+        if ($this->checkRequiredParams() and (new SProduct($this->request))->save($this->getId())) {
+            $this->changeLocation('/product/table');
+            return;
         }
-        $this->changeLocation('/?c=product&a=table');
-        return;
+        $config['product'] = new EProduct();
+        (new SProduct($this->request))->fillProductFromPost($config['product']);
+        return $this->render('product/edit.twig', $config);
     }
 
     /**
@@ -116,45 +80,35 @@ class Product extends Controller
      */
     public function update_action()
     {
-        $config = [
-            'showId' => true,
-            'action' => "/?c=product&a=update&id={$this->getId()}",
-            'title' => 'Редактирование товара',
-            'button' => 'Сохранить изменения',
-        ];
+        $config = $this->getConfig();
+        $config['action'] = "/product/update/?id={$this->getId()}";
+        $config['title'] = 'Редактирование товара';
+        $config['buttonTitle'] = 'Сохранить изменения';
+        $config['showId'] = true;
         if (empty($this->getId())) {
-            $this->changeLocation("/?c=product&a=create");
+            $this->changeLocation("/product/create");
             return;
         }
-        if (!$product = $this->getProduct()) {
-            return $this->render('product/edit.twig',
-                [
-                    'config' => $config,
-                    'sol' => $this->getSol(),
-                    'menu' => $this->getMenu(),
-                    'product' => MProduct::getSingle($this->getId()),
-                ]
-            );
+        if (empty($this->request->getPost())) {
+            $config['product'] = (new RProduct())->getSingle($this->getId());
+            return $this->render('product/edit.twig', $config);
         }
-        if ($product->name == '' or $product->title == '' or !$product->save()) {
-            return $this->render('product/edit.twig',
-                [
-                    'config' => $config,
-                    'sol' => $this->getSol(),
-                    'menu' => $this->getMenu(),
-                    'product' => $product,
-                ]
-            );
+        if ($this->checkRequiredParams() and (new SProduct($this->request))->save($this->getId())) {
+            $this->changeLocation('/product/table');
+            return;
         }
-        $this->changeLocation('/?c=product&a=table');
-        return;
+        $config['product'] = new EProduct();
+        (new SProduct($this->request))->fillProductFromPost($config['product']);
+        return $this->render('product/edit.twig', $config);
     }
 
     public function delete_action()
     {
-        MProduct::getSingle($this->getId())->delete();
-        $this->changeLocation('/?c=product&a=table');
-        return;
+        if ((new SProduct($this->request))->delete($this->getId())) {
+            $this->changeLocation('/product/table');
+            return;
+        }
+        $this->changeLocation();
     }
 
 }

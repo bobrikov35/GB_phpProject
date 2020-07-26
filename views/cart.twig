@@ -1,0 +1,58 @@
+{% extends 'layouts/main.twig' %}
+
+{% block style %}
+    <link rel="stylesheet" href="/css/cart.css?t={{ sol }}">
+{% endblock %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+
+    <div class="title">
+        <h2 class="title__text">Корзина</h2>
+    </div>
+
+    {% if count > 0 %}
+
+        <div class="table">
+            <div class="table__row">
+                <div class="table__image table__head">Изображение</div>
+                <div class="table__id table__head">ID</div>
+                <div class="table__title table__head">Заголовок</div>
+                <div class="table__price table__head">Цена</div>
+                <div class="table__quantity table__head">Количество</div>
+                <div class="table__cost table__head">Общая стоимость</div>
+                <div class="table__control table__head">Действия</div>
+            </div>
+
+            {% for id, product in goods %}
+                <div class="table__row">
+                    <div class="table__image">
+                        <a href="/product/single/?id={{ id }}">
+                            <img src="{{ product.image }}" alt="product">
+                        </a>
+                    </div>
+                    <div class="table__id">{{ id }}</div>
+                    <div class="table__title">{{ product.title }}</div>
+                    <div class="table__price">{{ product.price }}<i class="fa fa-rub" aria-hidden="true"></i></div>
+                    <div class="table__quantity">{{ product.quantity }}</div>
+                    <div class="table__cost">{{ product.price * product.quantity }}<i class="fa fa-rub" aria-hidden="true"></i></div>
+                    <div class="table__control">
+                        <a class="table__link" href="/cart/add/?id={{ id }}"><i class="fa fa-plus-circle"></i></a>
+                        <a class="table__link" href="/cart/remove/?id={{ id }}"><i class="fa fa-minus-circle"></i></a>
+                        <a class="table__link table__link_red" href="/cart/delete/?id={{ id }}">
+                            <i class="fa fa-times-circle"></i>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <p class="message">В корзине нет товаров</p>
+
+    {% endif %}
+
+{% endblock %}

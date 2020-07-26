@@ -6,6 +6,8 @@ namespace app\services;
 class Request
 {
 
+    private const CONTROLLER_DEFAULT = 'home';
+
     private string $URI;
     private string $controller = 'home';
     private string $action = 'default';
@@ -19,6 +21,7 @@ class Request
      */
     public function __construct()
     {
+        session_start();
         $this->URI = $_SERVER['REQUEST_URI'];
         $this->params = [
             'get' => $_GET,
@@ -31,13 +34,11 @@ class Request
 
     private function prepareRequest(): void
     {
-//        $pattern = "#(?P<controller>\w+)[/]?(?P<action>\w+)?[/]?[?]?(?P<params>.*)#ui";
-//        if (preg_match_all($pattern, $this->URI, $matches)) {
-//            $this->controller = $matches['controller'][0];
-//            $this->action = $matches['action'][0];
-//        }
-        $this->controller = $this->getParams('get', 'c');
-        $this->action = $this->getParams('get', 'a');
+        $pattern = "#(?P<controller>\w+)[/]?(?P<action>\w+)?[/]?[?]?(?P<params>.*)#ui";
+        if (preg_match_all($pattern, $this->URI, $matches)) {
+            $this->controller = ucfirst(strtolower($matches['controller'][0]));
+            $this->action = strtolower($matches['action'][0]);
+        }
         if (is_numeric($this->getParams('get', 'id'))) {
             $this->id = (int)$this->getParams('get', 'id');
         }
@@ -46,12 +47,26 @@ class Request
         }
     }
 
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     */
+    public function setSession(string $name, $value): void
+    {
+        $_SESSION[$name] = $value;
+    }
+
+
     /**
      * @return string
      */
     public function getController(): string
     {
-        return  'app\\controllers\\' . ucfirst($this->controller);
+        if (!class_exists("app\\controllers\\{$this->controller}")) {
+            $this->controller = self::CONTROLLER_DEFAULT;
+        }
+        return  "app\\controllers\\{$this->controller}";
     }
 
     /**
@@ -80,12 +95,12 @@ class Request
 
 
     /**
-     * @param string $list ['get', 'post', 'session']
+     * @param string $list ["get', 'post', 'session']
      * @param string $param
      * @param string $type
      * @return mixed
      */
-    private function getParams(string $list, string $param, string $type = 'string')
+    public function getParams(string $list, string $param, string $type = 'string')
     {
         if (empty($param)) {
             return $this->params[$list];

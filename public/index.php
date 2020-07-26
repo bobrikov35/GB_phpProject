@@ -1,7 +1,5 @@
 <?php
 
-session_start();
-
 use app\services\{Request, RendererTemplate};
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
@@ -40,13 +38,9 @@ function isLogin()
 $request = new Request();
 $controllerName = $request->getController();
 
-if (class_exists($controllerName)) {
-    $controller = new $controllerName(
-        $request,
-        new RendererTemplate()
-    );
-    $content = $controller->run($request->getAction());
-    if (!empty($content)) {
-        echo $content;
-    }
-}
+$controller = new $controllerName(
+    $request,
+    new RendererTemplate()
+);
+
+echo $controller->run();
