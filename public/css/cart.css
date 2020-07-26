@@ -36,47 +36,24 @@
   display: grid;
   grid-gap: 4px;
   grid-auto-rows: minmax(38px, auto);
-  grid-auto-columns: 4.2%;
-  grid-template-areas: "id  img img img img nm  nm  nm  nm  nm  nm  nm  nm  nm  nm  nm  nm  nm  prc prc prc prc" "id  img img img img ttl ttl ttl ttl ttl ttl ttl ttl ttl ttl ttl ttl ttl prc prc prc prc" "id  img img img img dsc dsc dsc dsc dsc dsc dsc dsc dsc dsc dsc dsc dsc ctr ctr ctr ctr";
+  grid-auto-columns: 5.91%;
+  grid-template-areas: "id  img img img ttl ttl ttl ttl ttl ttl ttl ttl cst cst cst cst" "id  img img img ttl ttl ttl ttl ttl ttl ttl ttl cst cst cst cst" "id  img img img qnt qnt qnt prc prc prc prc prc ctr ctr ctr ctr";
   padding: 4px;
   margin-bottom: 8px;
 }
-.table__id, .table__name, .table__title, .table__description, .table__image, .table__price, .table__control {
+.table__id, .table__title, .table__image, .table__price, .table__quantity, .table__cost, .table__control {
   border: 1px dashed rgba(225, 225, 225, 0.7);
   display: flex;
+  justify-content: center;
   align-items: center;
   padding: 4px 8px;
 }
 .table__id {
-  font-weight: bold;
   grid-area: id;
-  justify-content: center;
-}
-.table__name {
-  grid-area: nm;
-  max-height: 38px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  justify-content: flex-start;
-}
-.table__title {
-  grid-area: ttl;
-  max-height: 38px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  justify-content: flex-start;
-}
-.table__description {
-  grid-area: dsc;
-  max-height: 106px;
-  overflow: hidden;
-  justify-content: flex-start;
+  font-weight: bold;
 }
 .table__image {
   grid-area: img;
-  justify-content: center;
   padding: 8px;
 }
 .table__image a {
@@ -98,12 +75,27 @@
   max-width: 96%;
   object-fit: contain;
 }
+.table__title {
+  grid-area: ttl;
+  font-weight: bold;
+}
+.table__quantity {
+  grid-area: qnt;
+}
 .table__price {
   grid-area: prc;
-  justify-content: center;
 }
 .table__price i {
   margin-top: 3px;
+  margin-left: 6px;
+}
+.table__cost {
+  grid-area: cst;
+  font-size: 22px;
+  font-weight: bold;
+}
+.table__cost i {
+  margin-top: 4px;
   margin-left: 6px;
 }
 .table__control {
@@ -122,8 +114,8 @@
   color: indianred;
 }
 .table__head {
+  font-size: 18px;
   font-weight: bold;
-  justify-content: center;
 }
 
-/*# sourceMappingURL=productTable.css.map */
+/*# sourceMappingURL=cart.css.map */

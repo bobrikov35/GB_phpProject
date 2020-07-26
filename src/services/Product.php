@@ -31,7 +31,7 @@ class Product
         $product->setTitle($this->request->getPost('title'));
         $product->setDescription($this->request->getPost('description'));
         $product->setImage($this->request->getPost('image'));
-        $product->setPrice($this->request->getPost('price'));
+        $product->setPrice($this->request->getPost('price', 'int'));
         $product->setImagesFromString($this->request->getPost('images'));
     }
 

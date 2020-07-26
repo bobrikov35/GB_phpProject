@@ -66,7 +66,7 @@ class Product extends Entity
     {
         $this->price = 0;
         if (!empty($price) and is_numeric($price)) {
-            $this->price = (float)$price;
+            $this->price = (int)$price;
         }
     }
 

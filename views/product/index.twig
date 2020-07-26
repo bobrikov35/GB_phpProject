@@ -18,7 +18,7 @@
 
             {% for product in goods %}
                 <div class="product">
-                    <a class="product__image" href="?c=product&a=single&id={{ product.id }}">
+                    <a class="product__image" href="/product/single/?id={{ product.id }}">
                         <img src="{{ product.image }}" alt="product">
                     </a>
                     <h3 class="product__name">{{ product.title }}</h3>

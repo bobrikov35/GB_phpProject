@@ -6,6 +6,8 @@ namespace app\services;
 class Request
 {
 
+    private const CONTROLLER_DEFAULT = 'home';
+
     private string $URI;
     private string $controller = 'home';
     private string $action = 'default';
@@ -19,6 +21,7 @@ class Request
      */
     public function __construct()
     {
+        session_start();
         $this->URI = $_SERVER['REQUEST_URI'];
         $this->params = [
             'get' => $_GET,
@@ -44,11 +47,25 @@ class Request
         }
     }
 
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     */
+    public function setSession(string $name, $value): void
+    {
+        $_SESSION[$name] = $value;
+    }
+
+
     /**
      * @return string
      */
     public function getController(): string
     {
+        if (!class_exists("app\\controllers\\{$this->controller}")) {
+            $this->controller = self::CONTROLLER_DEFAULT;
+        }
         return  "app\\controllers\\{$this->controller}";
     }
 
@@ -83,7 +100,7 @@ class Request
      * @param string $type
      * @return mixed
      */
-    private function getParams(string $list, string $param, string $type = 'string')
+    public function getParams(string $list, string $param, string $type = 'string')
     {
         if (empty($param)) {
             return $this->params[$list];

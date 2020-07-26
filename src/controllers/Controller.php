@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\services\{Request, IRenderer};
+use app\services\{Request, IRenderer, Cart};
 
 
 abstract class Controller
@@ -59,6 +59,17 @@ abstract class Controller
     /**
      * @return array
      */
+    protected function getConfig(): array
+    {
+        return [
+            'sol' => $this->getSol(),
+            'menu' => $this->getMenu(),
+        ];
+    }
+
+    /**
+     * @return array
+     */
     function getMenu(): array
     {
         $menu = [
@@ -68,7 +79,12 @@ abstract class Controller
         if (isLogin()) {
             $menu[] = [ 'name' => 'Заказы', 'link' => '/order/list' ];
         }
-        $menu[] = [ 'name' => 'Корзина', 'link' => '/cart/list' ];
+        $cartCount = count((new Cart($this->request))->getList());
+        if ($cartCount > 0) {
+            $menu[] = [ 'name' => "Корзина ({$cartCount})", 'link' => '/cart/list' ];
+        } else {
+            $menu[] = [ 'name' => 'Корзина', 'link' => '/cart/list' ];
+        }
         if (isAdmin()) {
             $menu[] = [ 'name' => 'Работа с <br> товарами', 'link' => '/product/table' ];
             $menu[] = [ 'name' => 'Работа с <br> заказами', 'link' => '/order/table' ];
