@@ -1,0 +1,22 @@
+{% extends 'layouts/main.twig' %}
+
+{% block style %}
+    <link rel="stylesheet" href="/css/account.css?t={{ time }}">
+{% endblock %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+
+    <div class="title">
+        <h2 class="title__text"><span>{{ user.name }}</span>, добро пожаловать в магазин!</h2>
+    </div>
+
+    <div class="content">
+
+        <p class="content__text">Ваш логин: <span>{{ user.email }}</span></p>
+        <p class="content__text">Права администратора: <span>{{ admin }}</span></p>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'layouts/main.twig' %}
+
+{% block style %}
+    <link rel="stylesheet" href="/css/accountLogin.css?t={{ time }}">
+{% endblock %}
+
+{% block title %}Вход в аккаунт{% endblock %}
+
+{% block content %}
+
+    <div class="title">
+        <h2 class="title__text">Вход в аккаунт</h2>
+    </div>
+
+    <form class="content" method="post">
+
+        <div>
+            <label class="content__label" for="email">Email: </label>
+            <input class="content__edit" type="email" name="email" id="email" value="{{ user.email }}"
+                   placeholder="Введите email" required>
+        </div>
+
+        <div>
+            <label class="content__label" for="password">Пароль: </label>
+            <input class="content__edit" type="password" name="password" id="password" value="{{ user.password }}"
+                   placeholder="Введите пароль" required>
+        </div>
+
+        <div class="content__control">
+            <button class="button content__button" type="submit">Войти</button>
+            <a class="button content__link" href="/account/create">Создать аккаунт</a>
+        </div>
+
+    </form>
+
+{% endblock %}

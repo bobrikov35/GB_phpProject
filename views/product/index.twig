@@ -1,7 +1,7 @@
 {% extends 'layouts/main.twig' %}
 
 {% block style %}
-    <link rel="stylesheet" href="/css/product.css?t={{ sol }}">
+    <link rel="stylesheet" href="/css/product.css?t={{ time }}">
 {% endblock %}
 
 {% block title %}Каталог{% endblock %}
@@ -23,7 +23,7 @@
                     </a>
                     <h3 class="product__name">{{ product.title }}</h3>
                     <p class="product__text">{{ product.description }}</p>
-                    <p class="product__price">Цена: {{ product.price }}<i class="fa fa-rub" aria-hidden="true"></i></p>
+                    <p class="product__price">Цена: {{ product.price }}<i class="fa fa-rub"></i></p>
                     <a class="button product__link" href="/cart/add/?id={{ product.id }}">Добавить в корзину</a>
                 </div>
             {% endfor %}

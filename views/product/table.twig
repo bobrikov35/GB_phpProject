@@ -1,7 +1,7 @@
 {% extends 'layouts/main.twig' %}
 
 {% block style %}
-    <link rel="stylesheet" href="/css/productTable.css?t={{ sol }}">
+    <link rel="stylesheet" href="/css/productTable.css?t={{ time }}">
 {% endblock %}
 
 {% block title %}Товары{% endblock %}
@@ -33,15 +33,13 @@
             {% for product in goods %}
                 <div class="table__row">
                     <div class="table__id">{{ product.id }}</div>
-                    <div class="table__name">{{ product.name }}</div>
-                    <div class="table__title">{{ product.title }}</div>
+                    <div class="table__name"><p>{{ product.name }}</p></div>
+                    <div class="table__title"><p>{{ product.title }}</p></div>
                     <div class="table__description">{{ product.description }}</div>
                     <div class="table__image">
-                        <a href="/product/single/?id={{ product.id }}">
-                            <img src="{{ product.image }}" alt="product">
-                        </a>
+                        <a href="/product/single/?id={{ product.id }}"><img src="{{ product.image }}" alt="product"></a>
                     </div>
-                    <div class="table__price">{{ product.price }}<i class="fa fa-rub" aria-hidden="true"></i></div>
+                    <div class="table__price">{{ product.price }}<i class="fa fa-rub"></i></div>
                     <div class="table__control">
                         <a class="table__link" href="/product/update/?id={{ product.id }}">
                             <i class="fa fa-pencil-square"></i>

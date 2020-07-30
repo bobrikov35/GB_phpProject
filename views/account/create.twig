@@ -1,0 +1,41 @@
+{% extends 'layouts/main.twig' %}
+
+{% block style %}
+    <link rel="stylesheet" href="/css/accountCreate.css?t={{ time }}">
+{% endblock %}
+
+{% block title %}Создание аккаунта{% endblock %}
+
+{% block content %}
+
+    <div class="title">
+        <h2 class="title__text">Создание аккаунта</h2>
+    </div>
+
+    <form class="content" method="post">
+
+        <span>
+            <label class="content__label" for="name">Name: </label>
+            <input class="content__edit" type="text" name="name" id="name" value="{{ user.name }}"
+                   placeholder="Введите имя" required>
+        </span>
+
+        <span>
+            <label class="content__label" for="email">Email: </label>
+            <input class="content__edit" type="email" name="email" id="email" value="{{ user.email }}"
+                   placeholder="Введите email" required>
+        </span>
+
+        <span>
+            <label class="content__label" for="password">Пароль: </label>
+            <input class="content__edit" type="password" name="password" id="password" value="{{ user.password }}"
+                   placeholder="Введите пароль" required>
+        </span>
+
+        <div class="content__control">
+            <button class="button content__button" type="submit">Создать</button>
+        </div>
+
+    </form>
+
+{% endblock %}

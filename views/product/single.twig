@@ -1,11 +1,7 @@
 {% extends 'layouts/main.twig' %}
 
 {% block style %}
-    <link rel="stylesheet" href="/css/productSingle.css?t={{ sol }}">
-{% endblock %}
-
-{% block script %}
-    <script src="/js/product.js?t={{ sol }}"></script>
+    <link rel="stylesheet" href="/css/productSingle.css?t={{ time }}">
 {% endblock %}
 
 {% block title %}Товар{% endblock %}
@@ -66,5 +62,5 @@
 {% endblock %}
 
 {% block jscript %}
-    <script src="/js/product.js"></script>
+    <script src="/js/product.js?t={{ time }}"></script>
 {% endblock %}

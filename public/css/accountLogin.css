@@ -1,0 +1,51 @@
+@font-face {
+  font-family: "Huntsman";
+  src: url("../fonts/Huntsman.otf");
+}
+@font-face {
+  font-family: "Exo";
+  src: url("../fonts/Exo.otf");
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("../fonts/OpenSans.ttf");
+}
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 42px;
+}
+.title__text {
+  font-size: 32px;
+}
+
+.content__form {
+  display: flex;
+  flex-direction: column;
+}
+.content__label {
+  width: 78px;
+  font-size: 18px;
+  display: inline-block;
+}
+.content__edit {
+  width: 420px;
+  font-size: 18px;
+  padding: 6px 12px;
+  margin-bottom: 12px;
+}
+.content__control {
+  display: flex;
+}
+.content__button {
+  cursor: pointer;
+  width: 244px;
+  border: none;
+}
+.content__link {
+  width: 244px;
+  margin-left: 12px;
+}
+
+/*# sourceMappingURL=accountLogin.css.map */

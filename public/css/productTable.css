@@ -54,19 +54,20 @@
 }
 .table__name {
   grid-area: nm;
+  width: 100%;
   max-height: 38px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   justify-content: flex-start;
 }
 .table__title {
   grid-area: ttl;
+  width: 100%;
   max-height: 38px;
+  justify-content: flex-start;
+}
+.table__name p, .table__title p {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  justify-content: flex-start;
 }
 .table__description {
   grid-area: dsc;

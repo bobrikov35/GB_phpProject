@@ -42,6 +42,7 @@
   margin-bottom: 8px;
 }
 .table__id, .table__title, .table__image, .table__price, .table__quantity, .table__cost, .table__control {
+  text-align: center;
   border: 1px dashed rgba(225, 225, 225, 0.7);
   display: flex;
   justify-content: center;

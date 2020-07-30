@@ -1,7 +1,7 @@
 {% extends 'layouts/main.twig' %}
 
 {% block style %}
-    <link rel="stylesheet" href="/css/cart.css?t={{ sol }}">
+    <link rel="stylesheet" href="/css/cart.css?t={{ time }}">
 {% endblock %}
 
 {% block title %}Корзина{% endblock %}
@@ -34,9 +34,9 @@
                     </div>
                     <div class="table__id">{{ id }}</div>
                     <div class="table__title">{{ product.title }}</div>
-                    <div class="table__price">{{ product.price }}<i class="fa fa-rub" aria-hidden="true"></i></div>
+                    <div class="table__price">{{ product.price }}<i class="fa fa-rub"></i></div>
                     <div class="table__quantity">{{ product.quantity }}</div>
-                    <div class="table__cost">{{ product.price * product.quantity }}<i class="fa fa-rub" aria-hidden="true"></i></div>
+                    <div class="table__cost">{{ product.price * product.quantity }}<i class="fa fa-rub"></i></div>
                     <div class="table__control">
                         <a class="table__link" href="/cart/add/?id={{ id }}"><i class="fa fa-plus-circle"></i></a>
                         <a class="table__link" href="/cart/remove/?id={{ id }}"><i class="fa fa-minus-circle"></i></a>

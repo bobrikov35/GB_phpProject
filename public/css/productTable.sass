@@ -52,18 +52,19 @@ $row3: "id  img img img img dsc dsc dsc dsc dsc dsc dsc dsc dsc dsc dsc dsc dsc 
     justify-content: center
   &__name
     grid-area: nm
+    width: 100%
     max-height: 38px
-    overflow: hidden
-    white-space: nowrap
-    text-overflow: ellipsis
     justify-content: flex-start
   &__title
     grid-area: ttl
+    width: 100%
     max-height: 38px
-    overflow: hidden
-    white-space: nowrap
-    text-overflow: ellipsis
     justify-content: flex-start
+  &__name, &__title
+    & p
+      overflow: hidden
+      white-space: nowrap
+      text-overflow: ellipsis
   &__description
     grid-area: dsc
     max-height: 106px
