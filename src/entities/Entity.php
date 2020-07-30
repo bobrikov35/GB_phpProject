@@ -3,6 +3,10 @@
 namespace app\entities;
 
 
+/**
+ * Class Entity
+ * @package app\entities
+ */
 abstract class Entity
 {
 

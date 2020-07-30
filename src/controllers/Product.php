@@ -3,30 +3,41 @@
 namespace app\controllers;
 
 use app\entities\Product as EProduct;
-use app\repositories\Product as RProduct;
-use app\services\Product as SProduct;
 
 
+/**
+ * Class Product
+ * @package app\controllers
+ */
 class Product extends Controller
 {
 
     protected function default_action()
     {
-        return $this->list_action();
+        $this->toLocation('/product/list');
     }
 
+    /**
+     * @return mixed
+     */
     protected function list_action()
     {
         $config = $this->getConfig();
-        $config['goods'] = (new RProduct())->getList();
+        $config['goods'] = $this->app->repositoryProduct->getList();
         $config['count'] = count($config['goods']);
         return $this->render('product/index.twig', $config);
     }
 
+    /**
+     * @return mixed
+     */
     protected function table_action()
     {
+        if (!$this->app->authorization->isAdmin()) {
+            $this->toLocation('/product/list');
+        }
         $config = $this->getConfig();
-        $config['goods'] = (new RProduct())->getList();
+        $config['goods'] = $this->app->repositoryProduct->getList();
         $config['count'] = count($config['goods']);
         return $this->render('product/table.twig', $config);
     }
@@ -37,26 +48,31 @@ class Product extends Controller
     protected function single_action()
     {
         $config = $this->getConfig();
-        $config['product'] = (new RProduct())->getSingle($this->getId());
+        $config['product'] = $this->app->repositoryProduct->getSingle($this->getId());
         if (empty($config['product'])) {
-            $this->changeLocation('/product/list');
+            $this->toLocation('/product/list');
             return;
         }
         return $this->render('product/single.twig', $config);
     }
 
-
-    private function checkRequiredParams(): bool
+    /**
+     * @return bool
+     */
+    protected function checkRequiredParams(): bool
     {
         return !empty($this->request->getPost('name'))
-            and !empty($this->request->getPost('title'));
+                and !empty($this->request->getPost('title'));
     }
 
     /**
      * @return mixed|void
      */
-    public function create_action()
+    protected function create_action()
     {
+        if (!$this->app->authorization->isAdmin()) {
+            $this->toLocation('/product/list');
+        }
         $config = $this->getConfig();
         $config['action'] = '/product/create';
         $config['title'] = 'Добавление товара';
@@ -66,49 +82,55 @@ class Product extends Controller
             $config['product'] = new EProduct();
             return $this->render('product/edit.twig', $config);
         }
-        if ($this->checkRequiredParams() and (new SProduct($this->request))->save($this->getId())) {
-            $this->changeLocation('/product/table');
+        if ($this->checkRequiredParams() and $this->app->serviceProduct->save($this->getId())) {
+            $this->toLocation('/product/table');
             return;
         }
         $config['product'] = new EProduct();
-        (new SProduct($this->request))->fillProductFromPost($config['product']);
+        $this->app->serviceProduct->fillProductFromPost($config['product']);
         return $this->render('product/edit.twig', $config);
     }
 
     /**
      * @return mixed|void
      */
-    public function update_action()
+    protected function update_action()
     {
+        if (!$this->app->authorization->isAdmin()) {
+            $this->toLocation('/product/list');
+        }
         $config = $this->getConfig();
         $config['action'] = "/product/update/?id={$this->getId()}";
         $config['title'] = 'Редактирование товара';
         $config['buttonTitle'] = 'Сохранить изменения';
         $config['showId'] = true;
         if (empty($this->getId())) {
-            $this->changeLocation("/product/create");
+            $this->toLocation('/product/create');
             return;
         }
         if (empty($this->request->getPost())) {
-            $config['product'] = (new RProduct())->getSingle($this->getId());
+            $config['product'] = $this->app->repositoryProduct->getSingle($this->getId());
             return $this->render('product/edit.twig', $config);
         }
-        if ($this->checkRequiredParams() and (new SProduct($this->request))->save($this->getId())) {
-            $this->changeLocation('/product/table');
+        if ($this->checkRequiredParams() and $this->app->serviceProduct->save($this->getId())) {
+            $this->toLocation('/product/table');
             return;
         }
         $config['product'] = new EProduct();
-        (new SProduct($this->request))->fillProductFromPost($config['product']);
+        $this->app->serviceProduct->fillProductFromPost($config['product']);
         return $this->render('product/edit.twig', $config);
     }
 
-    public function delete_action()
+    protected function delete_action(): void
     {
-        if ((new SProduct($this->request))->delete($this->getId())) {
-            $this->changeLocation('/product/table');
+        if (!$this->app->authorization->isAdmin()) {
+            $this->toLocation('/product/list');
+        }
+        if ($this->app->serviceProduct->delete($this->getId())) {
+            $this->toLocation('/product/table');
             return;
         }
-        $this->changeLocation();
+        $this->toLocation();
     }
 
 }

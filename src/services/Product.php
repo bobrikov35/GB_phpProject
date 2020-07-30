@@ -3,24 +3,14 @@
 namespace app\services;
 
 use app\entities\Product as EProduct;
-use app\repositories\Product as RProduct;
 
 
-class Product
+/**
+ * Class Product
+ * @package app\services
+ */
+class Product extends Service
 {
-
-    private Request $request;
-
-
-    /**
-     * Product constructor.
-     * @param Request $request
-     */
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
 
     /**
      * @param EProduct $product
@@ -31,7 +21,7 @@ class Product
         $product->setTitle($this->request->getPost('title'));
         $product->setDescription($this->request->getPost('description'));
         $product->setImage($this->request->getPost('image'));
-        $product->setPrice($this->request->getPost('price', 'int'));
+        $product->setPrice($this->request->getPost('price'));
         $product->setImagesFromString($this->request->getPost('images'));
     }
 
@@ -44,10 +34,10 @@ class Product
         if (empty($id)) {
             $product = new EProduct();
         } else {
-            $product = (new RProduct())->getSingle($id);
+            $product = $this->container->repositoryProduct->getSingle($id);
         }
         $this->fillProductFromPost($product);
-        return (bool)(new RProduct())->save($product);
+        return (bool)$this->container->repositoryProduct->save($product);
     }
 
     /**
@@ -59,10 +49,11 @@ class Product
         if (empty($id)) {
             return false;
         }
-        if ($product = (new RProduct())->getSingle($id)) {
-            return (new RProduct())->delete($id);
+        $product = $this->container->repositoryProduct->getSingle($id);
+        if (empty($product)) {
+            return false;
         }
-        return false;
+        return $this->container->repositoryProduct->delete($id);
     }
 
 }

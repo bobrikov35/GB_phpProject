@@ -2,36 +2,38 @@
 
 namespace app\services;
 
+use app\entities\Entity;
 use app\repositories\Repository;
 
 
-class Paginator
+/**
+ * Class Paginator
+ * @package app\services
+ */
+class Paginator extends Service
 {
 
     private array $items = [];
     private int $quantity = 0;
     private int $itemsOnPage = 12;
-    private string $path;
-
+    private string $path = '/product/list/?page=';
 
     /**
-     * Paginator constructor.
      * @param string $path
      */
-    public function __construct(string $path = '/?c=product&a=list')
+    public function setPath(string $path): void
     {
         $this->path = $path;
     }
 
-
     /**
-     * @param Repository $model
+     * @param Repository $repository
      * @param int $page
      */
-    public function setItems(Repository $model, int $page = 1): void
+    public function setItems(Repository $repository, int $page = 1): void
     {
-        $this->quantity = $model->getQuantityItems();
-        $this->items = $model->getItemsOnPage($page, $this->itemsOnPage);
+        $this->quantity = $repository->getQuantityItems();
+        $this->items = $repository->getItemsByPage($page, $this->itemsOnPage);
     }
 
 
@@ -54,13 +56,13 @@ class Paginator
     {
         $urls = [];
         for ($i = 1; $i <= $this->getPages(); $i++) {
-            $urls[$i] = "{$this->path}&page={$i}";
+            $urls[$i] = "{$this->path}{$i}";
         }
         return $urls;
     }
 
     /**
-     * @return array Models
+     * @return Entity[]
      */
     public function getItems(): array
     {

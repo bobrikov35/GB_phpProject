@@ -3,6 +3,10 @@
 namespace app\entities;
 
 
+/**
+ * Class Product
+ * @package app\entities
+ */
 class Product extends Entity
 {
 
@@ -13,6 +17,19 @@ class Product extends Entity
     private int $price = 0;
     private array $images = [];
     private array $feedbacks = [];
+
+
+    /**
+     * @return array
+     */
+    public function getVars(): array
+    {
+        $vars = get_object_vars($this);
+        unset($vars['id']);
+        unset($vars['images']);
+        unset($vars['feedbacks']);
+        return $vars;
+    }
 
 
     /**
@@ -103,18 +120,6 @@ class Product extends Entity
         }
     }
 
-
-    /**
-     * @return array
-     */
-    public function getVars(): array
-    {
-        $vars = get_object_vars($this);
-        unset($vars['id']);
-        unset($vars['images']);
-        unset($vars['feedbacks']);
-        return $vars;
-    }
 
     /**
      * @return string

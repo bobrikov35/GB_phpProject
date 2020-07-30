@@ -3,6 +3,10 @@
 namespace app\entities;
 
 
+/**
+ * Class User
+ * @package app\entities
+ */
 class User extends Entity
 {
 
@@ -10,6 +14,17 @@ class User extends Entity
     private string $email = '';
     private string $password = '';
     private bool $admin = false;
+
+
+    /**
+     * @return array
+     */
+    public function getVars(): array
+    {
+        $vars = get_object_vars($this);
+        unset($vars['id']);
+        return $vars;
+    }
 
 
     /**
@@ -53,16 +68,6 @@ class User extends Entity
         $this->admin = !empty($admin) and $admin;
     }
 
-
-    /**
-     * @return array
-     */
-    public function getVars(): array
-    {
-        $vars = get_object_vars($this);
-        unset($vars['id']);
-        return $vars;
-    }
 
     /**
      * @return string

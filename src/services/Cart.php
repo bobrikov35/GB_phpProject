@@ -2,35 +2,24 @@
 
 namespace app\services;
 
-use app\repositories\Product as RProduct;
 
-
-class Cart
+/**
+ * Class Cart
+ * @package app\services
+ */
+class Cart extends Service
 {
-
-    private Request $request;
-
-
-    /**
-     * Product constructor.
-     * @param Request $request
-     */
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
 
     /**
      * @return int
      */
     private function getQuantity(): int
     {
-        $quantity = $this->request->getParams('get', 'quantity', 'int');
-        if ($quantity < 1) {
+        $quantity = $this->request->getParams('get', 'quantity');
+        if (empty($quantity) or !is_numeric($quantity)) {
             return 1;
         }
-        return $quantity;
+        return (int)$quantity;
     }
 
     /**
@@ -38,12 +27,12 @@ class Cart
      */
     public function getList(): array
     {
-        if (!empty($cart = $this->request->getSession('cart'))) {
-            return $cart;
+        $cart = $this->request->getSession('cart');
+        if (empty($cart)) {
+            return [];
         };
-        return [];
+        return $cart;
     }
-
 
     /**
      * @param int $id
@@ -54,7 +43,8 @@ class Cart
         if (empty($id)) {
             return false;
         }
-        if (empty($cart = $this->request->getSession('cart'))) {
+        $cart = $this->request->getSession('cart');
+        if (empty($cart)) {
             $cart = [];
         }
         if (key_exists($id, $cart)) {
@@ -62,7 +52,11 @@ class Cart
             $this->request->setSession('cart', $cart);
             return true;
         }
-        $product = (new RProduct())->getSingle($id);
+        $product = $this->container->repositoryProduct->getSingle($id);
+        if (empty($product)) {
+            $this->request->setSession('cart', $cart);
+            return false;
+        }
         $cart[$id] = [
             'time' => time(),
             'title' => $product->getTitle(),
@@ -84,7 +78,8 @@ class Cart
         if (empty($id)) {
             return false;
         }
-        if (empty($cart = $this->request->getSession('cart'))) {
+        $cart = $this->request->getSession('cart');
+        if (empty($cart)) {
             $cart = [];
             $this->request->setSession('cart', $cart);
             return false;

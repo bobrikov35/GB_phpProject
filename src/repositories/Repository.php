@@ -2,31 +2,48 @@
 
 namespace app\repositories;
 
-use app\entities\Entity;
+use app\engine\Container;
 use app\services\DB;
+use app\entities\Entity;
 
 
+/**
+ * Class Repository
+ * @package app\repositories
+ */
 abstract class Repository
 {
 
-    /**
-     * @return string
-     */
-    abstract public function getTableName(): string;
+    protected Container $container;
+
 
     /**
      * @return string
      */
-    abstract public function getEntityName(): string;
+    abstract protected function getTableName(): string;
+
+    /**
+     * @return string
+     */
+    abstract protected function getEntityName(): string;
+
+
+    /**
+     * @param Container $container
+     */
+    public function setContainer(Container $container): void
+    {
+        $this->container = $container;
+    }
+
 
     /**
      * @return DB
      */
     protected function getDatabase(): DB
     {
-        return DB::getInstance();
+        return $this->container->database;
     }
-
 
     /**
      * @return int
@@ -34,7 +51,8 @@ abstract class Repository
     public function getQuantityItems(): int
     {
         $sql = "SELECT COUNT(*) AS `count` FROM `{$this->getTableName()}`";
-        return (int)$this->getDatabase()->readItem($sql)['count'];
+        $result = $this->getDatabase()->readItem($sql);
+        return (int)$result['count'];
     }
 
     /**
@@ -74,7 +92,6 @@ abstract class Repository
         return $this->getDatabase()->readObjectList($sql, $this->getEntityName());
     }
 
-
     /**
      * @param array $vars
      * @return array
@@ -108,7 +125,7 @@ abstract class Repository
             "INSERT INTO `%s` (`%s`) VALUES (%s)",
             $this->getTableName(),
             implode('`, `', $params['columns']),
-            implode(',', $params['keys'])
+            implode(', ', $params['keys'])
         );
         if (!$this->getDatabase()->execute($sql, $params['values'])) {
             return 0;
@@ -121,7 +138,7 @@ abstract class Repository
      * @param array $keys
      * @return array
      */
-    protected function getSetForUpdate(array $columns, array $keys): array
+    private function getSetForUpdate(array $columns, array $keys): array
     {
         $set = [];
         if (count($columns) != count($keys)) {
@@ -158,10 +175,10 @@ abstract class Repository
      */
     public function save(Entity $entity)
     {
-        if (!empty($entity->getId())) {
-            return $this->update($entity);
+        if (empty($entity->getId())) {
+            return $this->insert($entity);
         }
-        return $this->insert($entity);
+        return $this->update($entity);
     }
 
     /**

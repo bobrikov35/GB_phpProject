@@ -2,56 +2,41 @@
 
 namespace app\controllers;
 
-use app\services\{Request, IRenderer, Cart};
+use app\engine\App;
+use app\services\Request;
 
 
+/**
+ * Class Controller
+ * @package app\controllers
+ */
 abstract class Controller
 {
 
-    private const ACTION_DEFAULT = 'default';
-
-    private string $sol;
+    protected App $app;
     protected Request $request;
-    protected IRenderer $renderer;
 
 
     /**
-     * Controller constructor.
-     * @param Request $request
-     * @param IRenderer $renderer
+     * Controller constructor
+     * @param App $app
      */
-    public function __construct(Request $request, IRenderer $renderer)
+    public function __construct(App $app)
     {
-        $this->sol = microtime(true).rand();
-        $this->request = $request;
-        $this->renderer = $renderer;
-    }
-
-
-    /**
-     * @param string $location
-     */
-    protected function changeLocation(string $location = '')
-    {
-        if ($location != '') {
-            header("location: {$location}");
-        } elseif (empty($_SERVER['HTTP_REFERER'])) {
-            header("location: /");
-        } else {
-            header("location: {$_SERVER['HTTP_REFERER']}");
-        }
+        $this->app = $app;
+        $this->request = $app->request;
     }
 
 
     /**
      * @return string
      */
-    protected function getAction(): string
+    private function getAction(): string
     {
         $action = $this->request->getAction();
         $method = $action . "_action";
         if (!method_exists($this, $method)) {
-            $action = self::ACTION_DEFAULT;
+            $action = $this->app->getSettings('actionDefault');
         }
         return $action;
     }
@@ -62,7 +47,7 @@ abstract class Controller
     protected function getConfig(): array
     {
         return [
-            'sol' => $this->getSol(),
+            'time' => $action = $this->app->getSettings('time'),
             'menu' => $this->getMenu(),
         ];
     }
@@ -70,27 +55,29 @@ abstract class Controller
     /**
      * @return array
      */
-    function getMenu(): array
+    private function getMenu(): array
     {
         $menu = [
             [ 'name' => 'Главная', 'link' => '/home' ],
             [ 'name' => 'Товары', 'link' => '/product/list' ],
         ];
-        if (isLogin()) {
+        if ($this->app->authorization->isLogin()) {
             $menu[] = [ 'name' => 'Заказы', 'link' => '/order/list' ];
         }
-        $cartCount = count((new Cart($this->request))->getList());
-        if ($cartCount > 0) {
-            $menu[] = [ 'name' => "Корзина ({$cartCount})", 'link' => '/cart/list' ];
-        } else {
+        $cart = $this->app->serviceCart->getList();
+        if (empty($cart)) {
             $menu[] = [ 'name' => 'Корзина', 'link' => '/cart/list' ];
+        } else {
+            $count = count($cart);
+            $menu[] = [ 'name' => "Корзина ({$count})", 'link' => '/cart/list' ];
         }
-        if (isAdmin()) {
+        if ($this->app->authorization->isAdmin()) {
             $menu[] = [ 'name' => 'Работа с <br> товарами', 'link' => '/product/table' ];
             $menu[] = [ 'name' => 'Работа с <br> заказами', 'link' => '/order/table' ];
         }
-        if (isLogin()) {
-            $menu[] = [ 'name' => $this->request->getSession('user')['name'], 'link' => '/user' ];
+        if ($this->app->authorization->isLogin()) {
+            $user = $this->request->getSession('user');
+            $menu[] = [ 'name' => $user['name'], 'link' => '/user' ];
             $menu[] = [ 'name' => 'Выйти', 'link' => '/user/logout' ];
         } else {
             $menu[] = [ 'name' => 'Войти', 'link' => '/user/login' ];
@@ -114,11 +101,6 @@ abstract class Controller
         return $this->request->getPage();
     }
 
-    protected function getSol(): int
-    {
-        return $this->sol;
-    }
-
 
     /**
      * @return mixed
@@ -136,7 +118,12 @@ abstract class Controller
      */
     public function render($template, $params = [])
     {
-        return $this->renderer->render($template, $params);
+        return $this->app->renderer->render($template, $params);
+    }
+
+    protected function toLocation(string $location = '', string $message = '')
+    {
+        $this->request->toLocation($location, $message);
     }
 
 }

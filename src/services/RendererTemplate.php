@@ -6,13 +6,17 @@ use \Exception;
 use \Twig\{Environment, Loader\FilesystemLoader};
 
 
+/**
+ * Class RendererTemplate
+ * @package app\services
+ */
 class RendererTemplate implements IRenderer
 {
 
     protected Environment $twig;
 
     /**
-     * TwigRenderer constructor.
+     * RendererTemplate constructor
      */
     public function __construct()
     {
@@ -29,7 +33,7 @@ class RendererTemplate implements IRenderer
     /**
      * @param string $template
      * @param array $params
-     * @return mixed
+     * @return mixed|string
      */
     public function render(string $template, array $params = [])
     {

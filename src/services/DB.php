@@ -3,45 +3,39 @@
 namespace app\services;
 
 use \PDO, \PDOStatement;
-use app\traits\TSingleton;
 
 
-class DB
+/**
+ * Class DB
+ * @package app\services
+ */
+class DB extends Service
 {
-
-    use TSingleton;
-
-
-    private array $config = [
-        'driver' =>  'mysql',
-        'host' =>  'localhost',
-        'dbname' =>  'php_shop',
-        'charset' =>  'UTF8',
-        'port' =>  3366,
-        'user' => 'root',
-        'password' => 'root'
-    ];
 
     private PDO $connect;
 
 
     /**
-     * @return PDO
+     * DB constructor
+     * @param array $config
      */
-    private function getConnect(): PDO
+    public function __construct(array $config = [])
     {
-        if (empty($this->connect)) {
-            $this->connect = new PDO(
-                $this->getPrepareDsn(),
-                $this->config['user'],
-                $this->config['password']
-            );
-            $this->connect->setAttribute(
-                PDO::ATTR_DEFAULT_FETCH_MODE,
-                PDO::FETCH_ASSOC
-            );
-        }
-        return $this->connect;
+        parent::__construct($config);
+        $this->makeConnect();
+    }
+
+    private function makeConnect(): void
+    {
+        $this->connect = new PDO(
+            $this->getPrepareDsn(),
+            $this->config['user'],
+            $this->config['password']
+        );
+        $this->connect->setAttribute(
+            PDO::ATTR_DEFAULT_FETCH_MODE,
+            PDO::FETCH_ASSOC
+        );
     }
 
     /**
@@ -65,9 +59,8 @@ class DB
      */
     public function getInsertedId(): int
     {
-        return (int)$this->getConnect()->lastInsertId();
+        return (int)$this->connect->lastInsertId();
     }
-
 
     /**
      * @param string $sql
@@ -76,7 +69,7 @@ class DB
      */
     private function query(string $sql, array $params = [])
     {
-        $PDOStatement = $this->getConnect()->prepare($sql);
+        $PDOStatement = $this->connect->prepare($sql);
         $PDOStatement->execute($params);
         return $PDOStatement;
     }

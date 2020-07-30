@@ -2,35 +2,40 @@
 
 namespace app\services;
 
+use app\engine\Container;
 
-class Request
+
+/**
+ * Class Request
+ * @package app\services
+ */
+class Request extends Service
 {
 
-    private const CONTROLLER_DEFAULT = 'home';
-
     private string $URI;
-    private string $controller = 'home';
-    private string $action = 'default';
+    private array $params;
+    private string $controller = '';
+    private string $action = '';
     private int $id = 0;
     private int $page = 1;
-    private array $params;
 
 
     /**
-     * Request constructor.
+     * DB constructor
+     * @param array $config
      */
-    public function __construct()
+    public function __construct(array $config = [])
     {
         session_start();
+        parent::__construct($config);
         $this->URI = $_SERVER['REQUEST_URI'];
         $this->params = [
-            'get' => $_GET,
-            'post' => $_POST,
-            'session' => $_SESSION,
+            'get' => !empty($_GET) ? $_GET : [],
+            'post' => !empty($_POST) ? $_POST : [],
+            'session' => !empty($_SESSION) ? $_SESSION : [],
         ];
         $this->prepareRequest();
     }
-
 
     private function prepareRequest(): void
     {
@@ -49,6 +54,14 @@ class Request
 
 
     /**
+     * @param Container $container
+     */
+    public function setContainer(Container $container): void
+    {
+        $this->container = $container;
+    }
+
+    /**
      * @param string $name
      * @param mixed $value
      */
@@ -63,10 +76,7 @@ class Request
      */
     public function getController(): string
     {
-        if (!class_exists("app\\controllers\\{$this->controller}")) {
-            $this->controller = self::CONTROLLER_DEFAULT;
-        }
-        return  "app\\controllers\\{$this->controller}";
+        return "app\\controllers\\{$this->controller}";
     }
 
     /**
@@ -93,65 +103,54 @@ class Request
         return $this->page;
     }
 
-
     /**
      * @param string $list ["get', 'post', 'session']
      * @param string $param
-     * @param string $type
-     * @return mixed
+     * @return array|string
      */
-    public function getParams(string $list, string $param, string $type = 'string')
+    public function getParams(string $list, string $param)
     {
         if (empty($param)) {
             return $this->params[$list];
         }
         if (empty($this->params[$list][$param])) {
-            $result = '';
+            return '';
+        }
+        return $this->params[$list][$param];
+    }
+
+    /**
+     * @param string $param
+     * @return mixed
+     */
+    public function getPost(string $param = '')
+    {
+        return $this->getParams('post', $param);
+    }
+
+    /**
+     * @param string $param
+     * @return mixed
+     */
+    public function getSession(string $param = '')
+    {
+        return $this->getParams('session', $param);
+    }
+
+
+    /**
+     * @param string $location
+     * @param string $message
+     */
+    public function toLocation(string $location = '', string $message = '')
+    {
+        if ($location != '') {
+            header("location: {$location}");
+        } elseif (empty($_SERVER['HTTP_REFERER'])) {
+            header("location: /");
         } else {
-            $result = $this->params[$list][$param];
+            header("location: {$_SERVER['HTTP_REFERER']}");
         }
-        if (gettype($result) == $type) {
-            return $result;
-        }
-        if ($type == 'int') {
-            if (is_numeric($result)) {
-                return (int)$result;
-            }
-            return 0;
-        }
-        if ($type == 'float') {
-            if (is_numeric($result)) {
-                return (float)$result;
-            }
-            return 0;
-        }
-        if ($type == 'array') {
-            if ($list = explode(PHP_EOL, $result)) {
-                return $list;
-            }
-            return [];
-        }
-        return $result;
-    }
-
-    /**
-     * @param string $param
-     * @param string $type
-     * @return mixed
-     */
-    public function getPost(string $param = '', string $type = 'string')
-    {
-        return $this->getParams('post', $param, $type);
-    }
-
-    /**
-     * @param string $param
-     * @param string $type
-     * @return mixed
-     */
-    public function getSession(string $param = '', string $type = 'string')
-    {
-        return $this->getParams('session', $param, $type);
     }
 
 }

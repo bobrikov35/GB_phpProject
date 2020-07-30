@@ -5,13 +5,17 @@ namespace app\repositories;
 use app\entities\{Entity, Product as EProduct};
 
 
+/**
+ * Class Product
+ * @package app\repositories
+ */
 class Product extends Repository
 {
 
     /**
      * @return string
      */
-    public function getTableName(): string
+    protected function getTableName(): string
     {
         return 'goods';
     }
@@ -19,7 +23,7 @@ class Product extends Repository
     /**
      * @return string
      */
-    public function getEntityName(): string
+    protected function getEntityName(): string
     {
         return EProduct::class;
     }

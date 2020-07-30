@@ -2,48 +2,52 @@
 
 namespace app\controllers;
 
-use app\services\Cart as SCart;
 
-
+/**
+ * Class Cart
+ * @package app\controllers
+ */
 class Cart extends Controller
 {
 
     protected function default_action()
     {
-        return $this->list_action();
+        $this->toLocation('/cart/list');
     }
 
+    /**
+     * @return mixed
+     */
     protected function list_action()
     {
         $config = $this->getConfig();
-        $config['goods'] = (new SCart($this->request))->getList();
+        $config['goods'] = $this->app->serviceCart->getList();
         $config['count'] = count($config['goods']);
         return $this->render('cart.twig', $config);
     }
 
-
-    protected function add_action()
+    protected function add_action(): void
     {
-        (new SCart($this->request))->add($this->getId());
-        $this->changeLocation();
+        $this->app->serviceCart->add($this->getId());
+        $this->toLocation();
     }
 
-    protected function remove_action()
+    protected function remove_action(): void
     {
-        (new SCart($this->request))->remove($this->getId());
-        $this->changeLocation();
+        $this->app->serviceCart->remove($this->getId());
+        $this->toLocation();
     }
 
-    protected function delete_action()
+    protected function delete_action(): void
     {
-        (new SCart($this->request))->delete($this->getId());
-        $this->changeLocation();
+        $this->app->serviceCart->delete($this->getId());
+        $this->toLocation();
     }
 
-    protected function clear_action()
+    protected function clear_action(): void
     {
-        (new SCart($this->request))->clear();
-        $this->changeLocation();
+        $this->app->serviceCart->clear();
+        $this->toLocation();
     }
 
 }

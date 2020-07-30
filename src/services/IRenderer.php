@@ -3,6 +3,10 @@
 namespace app\services;
 
 
+/**
+ * Interface IRenderer
+ * @package app\services
+ */
 interface IRenderer
 {
 
