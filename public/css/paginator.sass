@@ -1,0 +1,24 @@
+@import var
+
+
+.paginator
+  width: $siteWidth
+  height: 36px
+  display: flex
+  align-items: center
+  &__link
+    width: 36px
+    color: $mainColor
+    font-size: 20px
+    font-weight: bold
+    text-align: center
+    &:hover
+      text-decoration: underline
+    &_active
+      color: $brandColor
+      &:hover
+        text-decoration: none
+  &__button
+    width: 36px
+    text-align: center
+    padding: 0

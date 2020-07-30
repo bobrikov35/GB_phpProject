@@ -2,6 +2,7 @@
 
 {% block style %}
     <link rel="stylesheet" href="/css/product.css?t={{ time }}">
+    <link rel="stylesheet" href="/css/paginator.css?t={{ time }}">
 {% endblock %}
 
 {% block title %}Каталог{% endblock %}
@@ -27,6 +28,26 @@
                     <a class="button product__link" href="/cart/add/?id={{ product.id }}">Добавить в корзину</a>
                 </div>
             {% endfor %}
+
+        </div>
+
+        <div class="paginator">
+
+            <a class="button paginator__button" href="/product/list/?page=1">
+                <i class="fa fa-chevron-left"></i>
+            </a>
+
+            {% for page, link in pages.list %}
+                {% if page != pages.current %}
+                    <a class="paginator__link" href="{{ link }}">{{ page }}</a>
+                {% else %}
+                    <p class="paginator__link paginator__link_active">{{ page }}</p>
+                {% endif %}
+            {% endfor %}
+
+            <a class="button paginator__button" href="/product/list/?page={{ pages.count }}">
+                <i class="fa fa-chevron-right"></i>
+            </a>
 
         </div>
 

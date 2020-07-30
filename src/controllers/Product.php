@@ -14,7 +14,26 @@ class Product extends Controller
 
     protected function default_action()
     {
-        $this->toLocation('/product/list');
+        $this->toLocation('/product/list/?page=1');
+    }
+
+    /**
+     * @param string $action
+     * @return array
+     */
+    private function getListConfig(string $action): array
+    {
+        $this->app->paginator->setPath("/product/{$action}/?page=");
+        $this->app->paginator->setItems($this->app->repositoryProduct, $this->getPage());
+        $config = $this->getConfig();
+        $config['goods'] = $this->app->paginator->getItems();
+        $config['count'] = count($config['goods']);
+        $config['pages'] = [
+            'list' => $this->app->paginator->getUrls(),
+            'current' => $this->getPage(),
+        ];
+        $config['pages']['count'] = count($config['pages']['list']);
+        return $config;
     }
 
     /**
@@ -22,9 +41,7 @@ class Product extends Controller
      */
     protected function list_action()
     {
-        $config = $this->getConfig();
-        $config['goods'] = $this->app->repositoryProduct->getList();
-        $config['count'] = count($config['goods']);
+        $config = $this->getListConfig('list');
         return $this->render('product/index.twig', $config);
     }
 
@@ -33,12 +50,7 @@ class Product extends Controller
      */
     protected function table_action()
     {
-        if (!$this->app->authorization->isAdmin()) {
-            $this->toLocation('/product/list');
-        }
-        $config = $this->getConfig();
-        $config['goods'] = $this->app->repositoryProduct->getList();
-        $config['count'] = count($config['goods']);
+        $config = $this->getListConfig('table');
         return $this->render('product/table.twig', $config);
     }
 
@@ -50,7 +62,7 @@ class Product extends Controller
         $config = $this->getConfig();
         $config['product'] = $this->app->repositoryProduct->getSingle($this->getId());
         if (empty($config['product'])) {
-            $this->toLocation('/product/list');
+            $this->toLocation('/product/list/?page=1');
             return;
         }
         return $this->render('product/single.twig', $config);
@@ -59,7 +71,7 @@ class Product extends Controller
     /**
      * @return bool
      */
-    protected function checkRequiredParams(): bool
+    private function checkRequiredParams(): bool
     {
         return !empty($this->request->getPost('name'))
                 and !empty($this->request->getPost('title'));
@@ -71,7 +83,7 @@ class Product extends Controller
     protected function create_action()
     {
         if (!$this->app->authorization->isAdmin()) {
-            $this->toLocation('/product/list');
+            $this->toLocation('/product/list/?page=1');
         }
         $config = $this->getConfig();
         $config['action'] = '/product/create';
@@ -97,7 +109,7 @@ class Product extends Controller
     protected function update_action()
     {
         if (!$this->app->authorization->isAdmin()) {
-            $this->toLocation('/product/list');
+            $this->toLocation('/product/list/?page=1');
         }
         $config = $this->getConfig();
         $config['action'] = "/product/update/?id={$this->getId()}";
@@ -113,7 +125,7 @@ class Product extends Controller
             return $this->render('product/edit.twig', $config);
         }
         if ($this->checkRequiredParams() and $this->app->serviceProduct->save($this->getId())) {
-            $this->toLocation('/product/table');
+            $this->toLocation('/product/table/?page=1');
             return;
         }
         $config['product'] = new EProduct();
@@ -124,10 +136,10 @@ class Product extends Controller
     protected function delete_action(): void
     {
         if (!$this->app->authorization->isAdmin()) {
-            $this->toLocation('/product/list');
+            $this->toLocation('/product/list/?page=1');
         }
         if ($this->app->serviceProduct->delete($this->getId())) {
-            $this->toLocation('/product/table');
+            $this->toLocation('/product/table/?page=1');
             return;
         }
         $this->toLocation();

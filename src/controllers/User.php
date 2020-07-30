@@ -24,7 +24,7 @@ class User extends Controller
     /**
      * @return bool
      */
-    protected function checkRequiredParams(): bool
+    private function checkRequiredParams(): bool
     {
         return !empty($this->request->getPost('name'))
             and !empty($this->request->getPost('email'));

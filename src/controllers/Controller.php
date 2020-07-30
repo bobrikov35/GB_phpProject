@@ -59,10 +59,10 @@ abstract class Controller
     {
         $menu = [
             [ 'name' => 'Главная', 'link' => '/home' ],
-            [ 'name' => 'Товары', 'link' => '/product/list' ],
+            [ 'name' => 'Товары', 'link' => '/product/list/?page=1' ],
         ];
         if ($this->app->authorization->isLogin()) {
-            $menu[] = [ 'name' => 'Заказы', 'link' => '/order/list' ];
+            $menu[] = [ 'name' => 'Заказы', 'link' => '/order/list/?page=1' ];
         }
         $cart = $this->app->serviceCart->getList();
         if (empty($cart)) {
@@ -72,8 +72,8 @@ abstract class Controller
             $menu[] = [ 'name' => "Корзина ({$count})", 'link' => '/cart/list' ];
         }
         if ($this->app->authorization->isAdmin()) {
-            $menu[] = [ 'name' => 'Работа с <br> товарами', 'link' => '/product/table' ];
-            $menu[] = [ 'name' => 'Работа с <br> заказами', 'link' => '/order/table' ];
+            $menu[] = [ 'name' => 'Работа с <br> товарами', 'link' => '/product/table/?page=1' ];
+            $menu[] = [ 'name' => 'Работа с <br> заказами', 'link' => '/order/table/?page=1' ];
         }
         if ($this->app->authorization->isLogin()) {
             $user = $this->request->getSession('user');

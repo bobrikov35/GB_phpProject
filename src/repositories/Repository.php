@@ -69,7 +69,7 @@ abstract class Repository
             $quantity = 9;
         }
         $start = ($page - 1) * $quantity;
-        $sql = "SELECT * FROM `{$this->getTableName()}` LIMIT { $start }, { $quantity }";
+        $sql = "SELECT * FROM `{$this->getTableName()}` LIMIT {$start}, {$quantity}";
         return $this->getDatabase()->readObjectList($sql, $this->getEntityName());
     }
 
