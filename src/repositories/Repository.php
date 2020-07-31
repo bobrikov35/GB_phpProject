@@ -2,6 +2,7 @@
 
 namespace app\repositories;
 
+use \PDOStatement;
 use app\engine\Container;
 use app\services\DB;
 use app\entities\Entity;
@@ -14,19 +15,90 @@ use app\entities\Entity;
 abstract class Repository
 {
 
+    /**
+     * С В О Й С Т В А
+     */
+
     protected Container $container;
 
 
     /**
+     * А Б С Т Р А К Т Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Должно возвращать название таблицы
+     *
      * @return string
      */
     abstract protected function getTableName(): string;
 
     /**
+     * Должно возвращать имя класса
+     *
      * @return string
      */
     abstract protected function getEntityName(): string;
 
+
+    /**
+     * С И Н Т А К С И Ч Е С К И Й   С А Х А Р
+     */
+
+    /**
+     * @return DB
+     */
+    protected function getDatabase(): DB
+    {
+        return $this->container->database;
+    }
+
+    /**
+     * @param string $sql
+     * @param array $params
+     * @return array
+     */
+    protected function readItem(string $sql, array $params = []): array
+    {
+        return $this->container->database->readItem($sql, $params);
+    }
+
+    /**
+     * @param string $sql
+     * @param string $class
+     * @param array $params
+     * @return Entity|null
+     */
+    protected function readObject(string $sql, string $class, array $params = [])
+    {
+        return $this->container->database->readObject($sql, $class, $params);
+    }
+
+    /**
+     * @param string $sql
+     * @param string $class
+     * @param array $params
+     * @return Entity[]|array
+     */
+    protected function readObjectList(string $sql, string $class, array $params = []): array
+    {
+        return $this->container->database->readObjectList($sql, $class, $params);
+    }
+
+    /**
+     * @param string $sql
+     * @param array $params
+     * @return bool|PDOStatement
+     */
+    protected function execute(string $sql, array $params = [])
+    {
+        return $this->container->database->execute($sql, $params);
+    }
+
+
+    /**
+     * S E T T E R ' Ы
+     */
 
     /**
      * @param Container $container
@@ -38,29 +110,31 @@ abstract class Repository
 
 
     /**
-     * @return DB
+     * П У Б Л И Ч Н Ы Е   Ф У Н К Ц И И
      */
-    protected function getDatabase(): DB
-    {
-        return $this->container->database;
-    }
 
     /**
+     * Возвращает количество записей в таблице
+     *
      * @return int
      */
     public function getQuantityItems(): int
     {
         $sql = "SELECT COUNT(*) AS `count` FROM `{$this->getTableName()}`";
-        $result = $this->getDatabase()->readItem($sql);
-        return (int)$result['count'];
+        if ($result = $this->readItem($sql)) {
+            return (int)$result['count'];
+        }
+        return 0;
     }
 
     /**
+     * Возвращает список объектов на текущей странице
+     *
      * @param int $page
      * @param int $quantity
-     * @return array
+     * @return Entity[]|array
      */
-    public function getItemsByPage(int $page = 1, int $quantity = 12): array
+    public function getItemsByPage(int $page = 1, int $quantity = 9): array
     {
         if ($page < 1) {
             $page = 1;
@@ -70,10 +144,12 @@ abstract class Repository
         }
         $start = ($page - 1) * $quantity;
         $sql = "SELECT * FROM `{$this->getTableName()}` LIMIT {$start}, {$quantity}";
-        return $this->getDatabase()->readObjectList($sql, $this->getEntityName());
+        return $this->readObjectList($sql, $this->getEntityName());
     }
 
     /**
+     * Возвращает объект из базы данных по id
+     *
      * @param int $id
      * @return mixed
      */
@@ -84,15 +160,53 @@ abstract class Repository
     }
 
     /**
+     * Возвращает полный список объектов из базы данных
+     *
      * @return array
      */
     public function getList(): array
     {
         $sql = "SELECT * FROM `{$this->getTableName()}`";
-        return $this->getDatabase()->readObjectList($sql, $this->getEntityName());
+        return $this->readObjectList($sql, $this->getEntityName());
     }
 
     /**
+     * Сохраняет объект в базе данных
+     *
+     * @param Entity $entity
+     * @return bool|int
+     */
+    public function save(Entity $entity)
+    {
+        if (empty($entity->getId())) {
+            return $this->insert($entity);
+        }
+        return $this->update($entity);
+    }
+
+    /**
+     * Удаляет объект из базы данных
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function delete(int $id): bool
+    {
+        $sql = "DELETE FROM `{$this->getTableName()}` WHERE `id` = :id";
+        if ($this->execute($sql, [':id' => $id])) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * П Р И В А Т Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Возвращает спискок параметров для запросов на создание и изменение
+     *
      * @param array $vars
      * @return array
      */
@@ -115,25 +229,8 @@ abstract class Repository
     }
 
     /**
-     * @param Entity $entity
-     * @return int
-     */
-    protected function insert(Entity $entity): int
-    {
-        $params = $this->getParams($entity->getVars());
-        $sql = sprintf(
-            "INSERT INTO `%s` (`%s`) VALUES (%s)",
-            $this->getTableName(),
-            implode('`, `', $params['columns']),
-            implode(', ', $params['keys'])
-        );
-        if (!$this->getDatabase()->execute($sql, $params['values'])) {
-            return 0;
-        }
-        return $this->getDatabase()->getInsertedId();
-    }
-
-    /**
+     * Возвращает подготовленный набор column=key для запросов на изменение
+     *
      * @param array $columns
      * @param array $keys
      * @return array
@@ -151,6 +248,29 @@ abstract class Repository
     }
 
     /**
+     * Вставляет объект в базу данных
+     *
+     * @param Entity $entity
+     * @return int
+     */
+    protected function insert(Entity $entity): int
+    {
+        $params = $this->getParams($entity->getVars());
+        $sql = sprintf(
+            "INSERT INTO `%s` (`%s`) VALUES (%s)",
+            $this->getTableName(),
+            implode('`, `', $params['columns']),
+            implode(', ', $params['keys'])
+        );
+        if ($this->execute($sql, $params['values'])) {
+            return $this->getDatabase()->getInsertedId();
+        }
+        return 0;
+    }
+
+    /**
+     * Изменяет объект в базе данных
+     *
      * @param Entity $entity
      * @return bool
      */
@@ -163,35 +283,10 @@ abstract class Repository
             implode(', ', $this->getSetForUpdate($params['columns'], $params['keys']))
         );
         $params['values']['id'] = $entity->getId();
-        if (!$this->getDatabase()->execute($sql, $params['values'])) {
-            return false;
+        if ($this->execute($sql, $params['values'])) {
+            return true;
         }
-        return true;
-    }
-
-    /**
-     * @param Entity $entity
-     * @return bool|int
-     */
-    public function save(Entity $entity)
-    {
-        if (empty($entity->getId())) {
-            return $this->insert($entity);
-        }
-        return $this->update($entity);
-    }
-
-    /**
-     * @param int $id
-     * @return bool
-     */
-    public function delete(int $id)
-    {
-        $sql = "DELETE FROM `{$this->getTableName()}` WHERE `id` = :id";
-        if (!$this->getDatabase()->execute($sql, [':id' => $id])) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
 }
