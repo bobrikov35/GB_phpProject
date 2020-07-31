@@ -12,6 +12,10 @@ use app\engine\Container;
 class Request extends Service
 {
 
+    /**
+     * С В О Й С Т В А
+     */
+
     private string $URI;
     private array $params;
     private string $controller = '';
@@ -21,13 +25,17 @@ class Request extends Service
 
 
     /**
-     * DB constructor
+     * М А Г И Ч Е С К И Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Request constructor
      * @param array $config
      */
     public function __construct(array $config = [])
     {
-        session_start();
         parent::__construct($config);
+        session_start();
         $this->URI = $_SERVER['REQUEST_URI'];
         $this->params = [
             'get' => !empty($_GET) ? $_GET : [],
@@ -37,6 +45,9 @@ class Request extends Service
         $this->prepareRequest();
     }
 
+    /**
+     * Заполняет свойства
+     */
     private function prepareRequest(): void
     {
         $pattern = "#(?P<controller>\w+)[/]?(?P<action>\w+)?[/]?[?]?(?P<params>.*)#ui";
@@ -54,6 +65,10 @@ class Request extends Service
 
 
     /**
+     * S E T T E R ' Ы
+     */
+
+    /**
      * @param Container $container
      */
     public function setContainer(Container $container): void
@@ -61,23 +76,10 @@ class Request extends Service
         $this->container = $container;
     }
 
-    /**
-     * @param string $name
-     * @param mixed $value
-     */
-    public function setSession(string $name, $value): void
-    {
-        $_SESSION[$name] = $value;
-    }
-
 
     /**
-     * @return string
+     * G E T T E R ' Ы
      */
-    public function getController(): string
-    {
-        return "app\\controllers\\{$this->controller}";
-    }
 
     /**
      * @return string
@@ -85,6 +87,14 @@ class Request extends Service
     public function getAction(): string
     {
         return $this->action;
+    }
+
+    /**
+     * @return string
+     */
+    public function getController(): string
+    {
+        return "app\\controllers\\{$this->controller}";
     }
 
     /**
@@ -103,25 +113,48 @@ class Request extends Service
         return $this->page;
     }
 
+
     /**
-     * @param string $list ["get', 'post', 'session']
-     * @param string $param
-     * @return array|string
+     * П У Б Л И Ч Н Ы Е   Ф У Н К Ц И И
      */
-    public function getParams(string $list, string $param)
+
+    /**
+     * Записывает данные в сессию
+     *
+     * @param string $name
+     * @param mixed $value
+     */
+    public function setSession(string $name, $value): void
     {
+        $_SESSION[$name] = $value;
+    }
+
+    /**
+     * Возвращает массив (get, post или session) или параметр из массива
+     *
+     * @param string $list
+     * @param string $param
+     * @return array|mixed|null
+     */
+    public function getParams(string $list = 'get', string $param = '')
+    {
+        if (!in_array($list, ['get', 'post', 'session'])) {
+            return null;
+        }
         if (empty($param)) {
             return $this->params[$list];
         }
         if (empty($this->params[$list][$param])) {
-            return '';
+            return null;
         }
         return $this->params[$list][$param];
     }
 
     /**
+     * Возвращает post-массив или параметр из массива
+     *
      * @param string $param
-     * @return mixed
+     * @return array|mixed|null
      */
     public function getPost(string $param = '')
     {
@@ -129,20 +162,23 @@ class Request extends Service
     }
 
     /**
+     * Возвращает session-массив или параметр из массива
+     *
      * @param string $param
-     * @return mixed
+     * @return array|mixed|null
      */
     public function getSession(string $param = '')
     {
         return $this->getParams('session', $param);
     }
 
-
     /**
+     * Изменение локации (перенаправление)
+     *
      * @param string $location
      * @param string $message
      */
-    public function toLocation(string $location = '', string $message = '')
+    public function toLocation(string $location = '', string $message = ''): void
     {
         if ($location != '') {
             header("location: {$location}");
