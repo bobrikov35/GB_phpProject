@@ -3,6 +3,7 @@
 namespace app\services;
 
 use \PDO, \PDOStatement;
+use app\entities\Entity;
 
 
 /**
@@ -12,8 +13,16 @@ use \PDO, \PDOStatement;
 class DB extends Service
 {
 
+    /**
+     * С В О Й С Т В А
+     */
+
     private PDO $connect;
 
+
+    /**
+     * М А Г И Ч Е С К И Е   Ф У Н К Ц И И
+     */
 
     /**
      * DB constructor
@@ -25,6 +34,9 @@ class DB extends Service
         $this->makeConnect();
     }
 
+    /**
+     * Соединение с базой данных
+     */
     private function makeConnect(): void
     {
         $this->connect = new PDO(
@@ -39,6 +51,8 @@ class DB extends Service
     }
 
     /**
+     * Возвращает DSN-строку для PDO
+     *
      * @return string
      */
     private function getPrepareDsn(): string
@@ -55,6 +69,17 @@ class DB extends Service
 
 
     /**
+     * С И Н Т А К С И Ч Е С К И Й   С А Х А Р
+     */
+
+
+    /**
+     * П У Б Л И Ч Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Возвращает последний добавленный id в базу данных
+     *
      * @return int
      */
     public function getInsertedId(): int
@@ -63,83 +88,103 @@ class DB extends Service
     }
 
     /**
-     * @param string $sql
-     * @param array $params
-     * @return bool|PDOStatement
-     */
-    private function query(string $sql, array $params = [])
-    {
-        $PDOStatement = $this->connect->prepare($sql);
-        $PDOStatement->execute($params);
-        return $PDOStatement;
-    }
-
-    /**
+     * Возвращает первую строку результата выполнения запроса
+     *
      * @param string $sql
      * @param array $params
      * @return array
      */
     public function readItem(string $sql, array $params = []): array
     {
-        $result = $this->query($sql, $params)->fetch();
-        if ($result) {
+        if ($result = $this->query($sql, $params)->fetch()) {
             return $result;
         }
         return [];
     }
 
     /**
+     * Возвращает первую строку результата выполнения запроса в объект
+     *
      * @param string $sql
      * @param string $class
      * @param array $params
-     * @return mixed
+     * @return Entity|null
      */
     public function readObject(string $sql, string $class, array $params = [])
     {
         $PDOStatement = $this->query($sql, $params);
         $PDOStatement->setFetchMode(PDO::FETCH_CLASS, $class);
-        return $PDOStatement->fetch();
+        if ($result = $PDOStatement->fetch()) {
+            return $result;
+        }
+        return null;
     }
 
     /**
+     * Возвращает все строки результата выполнения запроса
+     *
      * @param string $sql
      * @param array $params
      * @return array
      */
     public function readTable(string $sql, array $params = []): array
     {
-        $result = $this->query($sql, $params)->fetchAll();
-        if ($result) {
+        if ($result = $this->query($sql, $params)->fetchAll()) {
             return $result;
         }
         return [];
     }
 
     /**
+     * Возвращает все строки результата выполнения запроса в виде списка объектов
+     *
      * @param string $sql
      * @param string $class
      * @param array $params
-     * @return array
+     * @return Entity[]|array
      */
     public function readObjectList(string $sql, string $class, array $params = []): array
     {
         $PDOStatement = $this->query($sql, $params);
         $PDOStatement->setFetchMode(PDO::FETCH_CLASS, $class);
-        $result = $PDOStatement->fetchAll();
-        if ($result) {
+        if ($result = $PDOStatement->fetchAll()) {
             return $result;
         }
         return [];
     }
 
     /**
+     * Выполняет запрос
+     *
      * @param string $sql
      * @param array $params
-     * @return bool|PDOStatement
+     * @return PDOStatement|bool
      */
     public function execute(string $sql, array $params = [])
     {
-        return $this->query($sql, $params);
+        if ($this->query($sql, $params)) {
+            return true;
+        };
+        return false;
+    }
+
+
+    /**
+     * П Р И В А Т Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Возвращает результат выполнения запроса
+     *
+     * @param string $sql
+     * @param array $params
+     * @return PDOStatement|bool
+     */
+    private function query(string $sql, array $params = [])
+    {
+        $PDOStatement = $this->connect->prepare($sql);
+        $PDOStatement->execute($params);
+        return $PDOStatement;
     }
 
 }
