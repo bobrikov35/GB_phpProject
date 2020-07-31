@@ -75,7 +75,7 @@ class Authorization extends Service
     public function isLogin(): bool
     {
         $user = $this->getSession('user');
-        return empty($user);
+        return !empty($user);
     }
 
     /**
