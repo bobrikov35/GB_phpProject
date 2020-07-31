@@ -12,13 +12,21 @@ use app\engine\Container;
 abstract class Service
 {
 
+    /**
+     * С В О Й С Т В А
+     */
+
     protected array $config;
     protected Container $container;
     protected Request $request;
 
 
     /**
-     * DB constructor
+     * М А Г И Ч Е С К И Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Service constructor
      * @param array $config
      */
     public function __construct(array $config = [])
@@ -26,6 +34,10 @@ abstract class Service
         $this->config = $config;
     }
 
+
+    /**
+     * S E T T E R ' Ы
+     */
 
     /**
      * @param Container $container
