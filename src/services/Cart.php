@@ -2,6 +2,8 @@
 
 namespace app\services;
 
+use app\entities\Product as EProduct;
+
 
 /**
  * Class Cart
@@ -11,23 +13,58 @@ class Cart extends Service
 {
 
     /**
-     * @return int
+     * С И Н Т А К С И Ч Е С К И Й   С А Х А Р
      */
-    private function getQuantity(): int
+
+    /**
+     * @param int $id
+     * @return EProduct|bool
+     */
+    private function getSingleProduct(int $id)
     {
-        $quantity = $this->request->getParams('get', 'quantity');
-        if (empty($quantity) or !is_numeric($quantity)) {
-            return 1;
-        }
-        return (int)$quantity;
+        return $this->container->repositoryProduct->getSingle($id);
     }
 
     /**
+     * @param string $param
+     * @return mixed
+     */
+    private function getParams(string $param)
+    {
+        return $this->request->getParams('get', $param);
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     */
+    private function setSession(string $name, $value)
+    {
+        $this->request->setSession($name, $value);
+    }
+
+    /**
+     * @param string $param
+     * @return mixed
+     */
+    private function getSession(string $param)
+    {
+        return $this->request->getSession($param);
+    }
+
+
+    /**
+     * П У Б Л И Ч Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Возвращает содержимое корзины
+     *
      * @return array
      */
     public function getList(): array
     {
-        $cart = $this->request->getSession('cart');
+        $cart = $this->getSession('cart');
         if (empty($cart)) {
             return [];
         };
@@ -35,7 +72,9 @@ class Cart extends Service
     }
 
     /**
-     * @param int $id
+     * Добвляет товар в корзину
+     *
+     * @param int $id    товар
      * @return bool
      */
     public function add(int $id): bool
@@ -43,18 +82,18 @@ class Cart extends Service
         if (empty($id)) {
             return false;
         }
-        $cart = $this->request->getSession('cart');
+        $cart = $this->getSession('cart');
         if (empty($cart)) {
             $cart = [];
         }
         if (key_exists($id, $cart)) {
             $cart[$id]['quantity'] += $this->getQuantity();
-            $this->request->setSession('cart', $cart);
+            $this->setSession('cart', $cart);
             return true;
         }
-        $product = $this->container->repositoryProduct->getSingle($id);
+        $product = $this->getSingleProduct($id);
         if (empty($product)) {
-            $this->request->setSession('cart', $cart);
+            $this->setSession('cart', $cart);
             return false;
         }
         $cart[$id] = [
@@ -64,12 +103,14 @@ class Cart extends Service
             'price' => $product->getPrice(),
             'quantity' => $this->getQuantity(),
         ];
-        $this->request->setSession('cart', $cart);
+        $this->setSession('cart', $cart);
         return true;
     }
 
     /**
-     * @param int $id
+     * Убирает товар из корзины
+     *
+     * @param int $id    товар
      * @param bool $all
      * @return bool
      */
@@ -78,10 +119,9 @@ class Cart extends Service
         if (empty($id)) {
             return false;
         }
-        $cart = $this->request->getSession('cart');
+        $cart = $this->getSession('cart');
         if (empty($cart)) {
-            $cart = [];
-            $this->request->setSession('cart', $cart);
+            $this->clear();
             return false;
         }
         if (!key_exists($id, $cart)) {
@@ -92,7 +132,7 @@ class Cart extends Service
         } else {
             $cart[$id]['quantity'] -= $this->getQuantity();
         }
-        $this->request->setSession('cart', $cart);
+        $this->setSession('cart', $cart);
         return true;
     }
 
@@ -103,7 +143,26 @@ class Cart extends Service
 
     public function clear(): void
     {
-        $this->request->setSession('cart', []);
+        $this->setSession('cart', []);
+    }
+
+
+    /**
+     * П Р И В А Т Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Возвращает количество товара (для добавления или удаления)
+     *
+     * @return int    по умолчанию: 1
+     */
+    private function getQuantity(): int
+    {
+        $quantity = $this->getParams('quantity');
+        if (empty($quantity) or !is_numeric($quantity) or (int)$quantity < 0) {
+            return 1;
+        }
+        return (int)$quantity;
     }
 
 }
