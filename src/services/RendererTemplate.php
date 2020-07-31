@@ -13,10 +13,19 @@ use \Twig\{Environment, Loader\FilesystemLoader};
 class RendererTemplate implements IRenderer
 {
 
+    /**
+     * С В О Й С Т В А
+     */
+
     protected Environment $twig;
 
+
     /**
-     * RendererTemplate constructor
+     * М А Г И Ч Е С К И Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * RendererTemplate constructor.
      */
     public function __construct()
     {
@@ -30,12 +39,19 @@ class RendererTemplate implements IRenderer
         ]);
     }
 
+
     /**
+     * П У Б Л И Ч Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Вывод шаблона
+     *
      * @param string $template
      * @param array $params
-     * @return mixed|string
+     * @return string
      */
-    public function render(string $template, array $params = [])
+    public function render(string $template, array $params = []): string
     {
         try {
             return $this->twig->render($template, $params);
