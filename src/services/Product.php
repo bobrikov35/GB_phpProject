@@ -13,35 +13,84 @@ class Product extends Service
 {
 
     /**
-     * @param EProduct $product
+     * С И Н Т А К С И Ч Е С К И Й   С А Х А Р
      */
-    public function fillProductFromPost(EProduct $product)
+
+    /**
+     * @param int $id
+     * @return EProduct|null
+     */
+    private function getSingleProduct(int $id)
     {
-        $product->setName($this->request->getPost('name'));
-        $product->setTitle($this->request->getPost('title'));
-        $product->setDescription($this->request->getPost('description'));
-        $product->setImage($this->request->getPost('image'));
-        $product->setPrice($this->request->getPost('price'));
-        $product->setImagesFromString($this->request->getPost('images'));
+        return $this->container->repositoryProduct->getSingle($id);
+    }
+
+    /**
+     * @param EProduct $product
+     * @return bool|int
+     */
+    private function saveProduct(EProduct $product)
+    {
+        return $this->container->repositoryProduct->save($product);
     }
 
     /**
      * @param int $id
      * @return bool
      */
-    public function save(int $id): bool
+    private function deleteProduct(int $id): bool
+    {
+        return $this->container->repositoryProduct->delete($id);
+    }
+
+    /**
+     * @param string $param
+     * @return array|mixed|null
+     */
+    private function getPost(string $param)
+    {
+        return $this->request->getPost($param);
+    }
+
+
+    /**
+     * П У Б Л И Ч Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Заполняет товар данными из post-запроса
+     *
+     * @param EProduct $product
+     */
+    public function fillProductFromPost(EProduct $product):void
+    {
+        $product->setName($this->getPost('name'));
+        $product->setTitle($this->getPost('title'));
+        $product->setDescription($this->getPost('description'));
+        $product->setImage($this->getPost('image'));
+        $product->setPrice($this->getPost('price'));
+        $product->setImagesFromString($this->getPost('images'));
+    }
+
+    /**
+     * Сохранение товара
+     *
+     * @param int $id    товар
+     * @return bool|int
+     */
+    public function save(int $id)
     {
         if (empty($id)) {
             $product = new EProduct();
         } else {
-            $product = $this->container->repositoryProduct->getSingle($id);
+            $product = $this->getSingleProduct($id);
         }
         $this->fillProductFromPost($product);
-        return (bool)$this->container->repositoryProduct->save($product);
+        return $this->saveProduct($product);
     }
 
     /**
-     * @param int $id
+     * @param int $id    товар
      * @return bool
      */
     public function delete(int $id): bool
@@ -49,11 +98,11 @@ class Product extends Service
         if (empty($id)) {
             return false;
         }
-        $product = $this->container->repositoryProduct->getSingle($id);
+        $product = $this->getSingleProduct($id);
         if (empty($product)) {
             return false;
         }
-        return $this->container->repositoryProduct->delete($id);
+        return $this->deleteProduct($id);
     }
 
 }
