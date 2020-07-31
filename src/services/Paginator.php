@@ -28,16 +28,6 @@ class Paginator extends Service
      */
 
     /**
-     * @param Repository $repository
-     * @param int $page
-     */
-    public function setItems(Repository $repository, int $page = 1): void
-    {
-        $this->quantity = $repository->getQuantityItems();
-        $this->items = $repository->getItemsByPage($page, $this->itemsOnPage);
-    }
-
-    /**
      * @param string $path
      */
     public function setPath(string $path): void
@@ -64,6 +54,20 @@ class Paginator extends Service
      */
 
     /**
+     * Заполняет список объектами из переданного репозитория
+     *
+     * @param Repository $repository
+     * @param int $page
+     */
+    public function setItems(Repository $repository, int $page = 1): void
+    {
+        $this->quantity = $repository->getQuantityItems();
+        $this->items = $repository->getItemsByPage($page, $this->itemsOnPage);
+    }
+
+    /**
+     * Возвращает список ссылок
+     *
      * @return array
      */
     public function getUrls(): array
@@ -81,6 +85,8 @@ class Paginator extends Service
      */
 
     /**
+     * Возвращает количество страниц
+     *
      * @return int
      */
     private function getPages(): int
