@@ -13,6 +13,12 @@ class Product extends Repository
 {
 
     /**
+     * О Б Я З А Т Е Л Ь Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Возвращает название таблицы
+     *
      * @return string
      */
     protected function getTableName(): string
@@ -21,6 +27,8 @@ class Product extends Repository
     }
 
     /**
+     * Возвращает имя класса
+     *
      * @return string
      */
     protected function getEntityName(): string
@@ -30,6 +38,12 @@ class Product extends Repository
 
 
     /**
+     * П У Б Л И Ч Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Получает все изображения товара
+     *
      * @param EProduct $product
      * @return void
      */
@@ -37,15 +51,15 @@ class Product extends Repository
     {
         $images = [];
         $sql = 'SELECT `link` FROM `images` WHERE `id_product` = :id';
-        if ($result = $this->getDatabase()->readTable($sql, [':id' => $product->getId()])) {
-            foreach ($result as $row) {
-                $images[] = $row['link'];
-            }
+        foreach ($this->readTable($sql, [':id' => $product->getId()]) as $row) {
+            $images[] = $row['link'];
         }
         $product->setImages($images);
     }
 
     /**
+     * Получает все отзывы о товаре
+     *
      * @param EProduct $product
      * @return void
      */
@@ -53,20 +67,19 @@ class Product extends Repository
     {
         $feedbacks = [];
         $sql = 'SELECT `name`, `email`, `comment` FROM `feedbacks` WHERE `id_product` = :id';
-        if ($result = $this->getDatabase()->readTable($sql, [':id' => $product->getId()])) {
-            foreach ($result as $row) {
-                $feedbacks[] = [
-                    'name' => $row['name'],
-                    'email' => $row['email'],
-                    'comment' => $row['comment'],
-                ];
-            }
+        foreach ($this->getDatabase()->readTable($sql, [':id' => $product->getId()]) as $row) {
+            $feedbacks[] = [
+                'name' => $row['name'],
+                'email' => $row['email'],
+                'comment' => $row['comment'],
+            ];
         }
         $product->setFeedbacks($feedbacks);
     }
 
-
     /**
+     * Возвращает товар из базы данных по id
+     *
      * @param int $id
      * @return mixed
      */
@@ -79,8 +92,15 @@ class Product extends Repository
         return $product;
     }
 
+
     /**
-     * @param Entity $product
+     * П Р И В А Т Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Вставляет товар в базу данных
+     *
+     * @param EProduct|Entity $product
      * @return int
      */
     protected function insert(Entity $product): int
@@ -88,7 +108,7 @@ class Product extends Repository
         /**
          * @var EProduct $product
          */
-        if (!$id = parent::insert($product) or empty($product->getImages())) {
+        if (empty($id = parent::insert($product))) {
             return $id;
         }
         foreach ($product->getImages() as $image) {
@@ -96,13 +116,15 @@ class Product extends Repository
                 continue;
             }
             $sql = "INSERT INTO `images` (`link`, `id_product`) VALUES (:link, :id)";
-            $this->getDatabase()->execute($sql, [':link' => $image, ':id' => $id]);
+            $this->execute($sql, [':link' => $image, ':id' => $id]);
         }
         return $id;
     }
 
     /**
-     * @param Entity $product
+     * Изменяет товар в базе данных
+     *
+     * @param EProduct|Entity $product
      * @return bool
      */
     protected function update(Entity $product): bool
