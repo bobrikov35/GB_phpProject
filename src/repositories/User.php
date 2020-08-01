@@ -2,7 +2,7 @@
 
 namespace app\repositories;
 
-use app\entities\User as EUser;
+use app\entities\{Entity, User as EUser};
 
 
 /**
@@ -13,6 +13,12 @@ class User extends Repository
 {
 
     /**
+     * О Б Я З А Т Е Л Ь Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Возвращает название таблицы
+     *
      * @return string
      */
     protected function getTableName(): string
@@ -21,6 +27,8 @@ class User extends Repository
     }
 
     /**
+     * Возвращает имя класса
+     *
      * @return string
      */
     protected function getEntityName(): string
@@ -30,27 +38,34 @@ class User extends Repository
 
 
     /**
+     * П У Б Л И Ч Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Возвращает пользователя
+     *
      * @param string $email
-     * @return mixed
+     * @return Entity|EUser|null
      */
     public function getUser(string $email)
     {
         $sql = "SELECT * FROM `{$this->getTableName()}` WHERE `email` = :email";
-        return $this->getDatabase()->readObject($sql, $this->getEntityName(), [':email' => $email]);
+        return $this->readObject($sql, $this->getEntityName(), [':email' => $email]);
     }
 
     /**
+     * Возвращает пароль пользователя
+     *
      * @param string $email
-     * @return bool|mixed
+     * @return string|bool
      */
     public function getPassword(string $email)
     {
         $sql = "SELECT `password` FROM `{$this->getTableName()}` WHERE `email` = :email";
-        $result = $this->getDatabase()->readItem($sql, [':email' => $email]);
-        if (!$result) {
-            return false;
+        if ($result = $this->readItem($sql, [':email' => $email])) {
+            return $result['password'];
         }
-        return $result['password'];
+        return false;
     }
 
 }
