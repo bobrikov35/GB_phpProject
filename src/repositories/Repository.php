@@ -76,6 +76,16 @@ abstract class Repository
 
     /**
      * @param string $sql
+     * @param array $params
+     * @return array
+     */
+    protected function readTable(string $sql, array $params = []): array
+    {
+        return $this->container->database->readTable($sql, $params);
+    }
+
+    /**
+     * @param string $sql
      * @param string $class
      * @param array $params
      * @return Entity[]|array
