@@ -44,7 +44,7 @@ class Product extends Repository
     /**
      * Получает все изображения товара
      *
-     * @param EProduct $product
+     * @param EProduct|Entity $product
      * @return void
      */
     public function fetchImages(EProduct $product): void
@@ -60,7 +60,7 @@ class Product extends Repository
     /**
      * Получает все отзывы о товаре
      *
-     * @param EProduct $product
+     * @param EProduct|Entity $product
      * @return void
      */
     public function fetchFeedbacks(EProduct $product): void
@@ -81,14 +81,16 @@ class Product extends Repository
      * Возвращает товар из базы данных по id
      *
      * @param int $id
-     * @return mixed
+     * @return EProduct|Entity|null
      */
     public function getSingle(int $id)
     {
-        if ($product = parent::getSingle($id)) {
-            $this->fetchImages($product);
-            $this->fetchFeedbacks($product);
+        $product = parent::getSingle($id);
+        if (empty($product)) {
+            return null;
         }
+        $this->fetchImages($product);
+        $this->fetchFeedbacks($product);
         return $product;
     }
 
@@ -105,9 +107,6 @@ class Product extends Repository
      */
     protected function insert(Entity $product): int
     {
-        /**
-         * @var EProduct $product
-         */
         if (empty($id = parent::insert($product))) {
             return $id;
         }
@@ -132,9 +131,6 @@ class Product extends Repository
         if (!parent::update($product)) {
             return false;
         }
-        /**
-         * @var EProduct $product
-         */
         $newImages = array_unique($product->getImages());
         $this->fetchImages($product);
         foreach ($product->getImages() as $image) {
