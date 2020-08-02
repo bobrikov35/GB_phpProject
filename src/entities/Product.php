@@ -10,6 +10,10 @@ namespace app\entities;
 class Product extends Entity
 {
 
+    /**
+     * С В О Й С Т В А
+     */
+
     private string $name = '';
     private string $title = '';
     private string $description = '';
@@ -18,6 +22,10 @@ class Product extends Entity
     private array $images = [];
     private array $feedbacks = [];
 
+
+    /**
+     * О Б Я З А Т Е Л Ь Н Ы Е   Ф У Н К Ц И И
+     */
 
     /**
      * @return array
@@ -31,6 +39,10 @@ class Product extends Entity
         return $vars;
     }
 
+
+    /**
+     * S E T T E R ' Ы
+     */
 
     /**
      * @param mixed $name
@@ -120,6 +132,10 @@ class Product extends Entity
         }
     }
 
+
+    /**
+     * G E T T E R ' Ы
+     */
 
     /**
      * @return string
