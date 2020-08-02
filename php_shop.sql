@@ -29,11 +29,11 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `feedbacks` (
   `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
   `email` varchar(100) NOT NULL,
   `comment` text NOT NULL,
   `id_product` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Дамп данных таблицы `feedbacks`
@@ -51,11 +51,11 @@ INSERT INTO `feedbacks` (`id`, `name`, `email`, `comment`, `id_product`) VALUES
 CREATE TABLE `goods` (
   `id` int NOT NULL,
   `name` varchar(100) NOT NULL,
-  `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `description` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
-  `image` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
+  `title` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+  `description` varchar(1024) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',
+  `image` varchar(128) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',
   `price` int NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Дамп данных таблицы `goods`
@@ -90,7 +90,7 @@ CREATE TABLE `images` (
   `id` int NOT NULL,
   `link` varchar(100) NOT NULL,
   `id_product` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Дамп данных таблицы `images`
@@ -183,7 +183,7 @@ CREATE TABLE `orders` (
   `id` int NOT NULL,
   `id_user` int NOT NULL,
   `status` set('Передан на обработку','Формируется к отправке','Подготовлен счет на оплату','Ждите звонка от оператора','Едет в пункт выдачи','Ожидаем поставку товара','Отменен','Готов к получению','Передан в отдел доставки','Передан курьеру','Передан в транспортную компанию','Нам не удалось с Вами связаться','Выполнен') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Дамп данных таблицы `orders`
@@ -204,7 +204,7 @@ CREATE TABLE `order_product` (
   `id_product` int NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `quantity` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Дамп данных таблицы `order_product`
@@ -226,9 +226,9 @@ CREATE TABLE `users` (
   `id` int NOT NULL,
   `name` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
+  `password` varchar(100) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',
   `admin` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Дамп данных таблицы `users`
