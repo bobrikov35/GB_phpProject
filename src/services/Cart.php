@@ -74,29 +74,29 @@ class Cart extends Service
     /**
      * Добвляет товар в корзину
      *
-     * @param int $id    товар
+     * @param int $id_product
      * @return bool
      */
-    public function add(int $id): bool
+    public function add(int $id_product): bool
     {
-        if (empty($id)) {
+        if (empty($id_product)) {
             return false;
         }
         $cart = $this->getSession('cart');
         if (empty($cart)) {
             $cart = [];
         }
-        if (key_exists($id, $cart)) {
-            $cart[$id]['quantity'] += $this->getQuantity();
+        if (key_exists($id_product, $cart)) {
+            $cart[$id_product]['quantity'] += $this->getQuantity();
             $this->setSession('cart', $cart);
             return true;
         }
-        $product = $this->getSingleProduct($id);
+        $product = $this->getSingleProduct($id_product);
         if (empty($product)) {
             $this->setSession('cart', $cart);
             return false;
         }
-        $cart[$id] = [
+        $cart[$id_product] = [
             'time' => time(),
             'title' => $product->getTitle(),
             'image' => $product->getImage(),
@@ -110,13 +110,13 @@ class Cart extends Service
     /**
      * Убирает товар из корзины
      *
-     * @param int $id    товар
+     * @param int $id_product
      * @param bool $all
      * @return bool
      */
-    public function remove(int $id, bool $all = false): bool
+    public function remove(int $id_product, bool $all = false): bool
     {
-        if (empty($id)) {
+        if (empty($id_product)) {
             return false;
         }
         $cart = $this->getSession('cart');
@@ -124,21 +124,21 @@ class Cart extends Service
             $this->clear();
             return false;
         }
-        if (!key_exists($id, $cart)) {
+        if (!key_exists($id_product, $cart)) {
             return false;
         }
-        if ($all or $cart[$id]['quantity'] <= $this->getQuantity()) {
-            unset($cart[$id]);
+        if ($all or $cart[$id_product]['quantity'] <= $this->getQuantity()) {
+            unset($cart[$id_product]);
         } else {
-            $cart[$id]['quantity'] -= $this->getQuantity();
+            $cart[$id_product]['quantity'] -= $this->getQuantity();
         }
         $this->setSession('cart', $cart);
         return true;
     }
 
-    public function delete(int $id): bool
+    public function delete(int $id_product): bool
     {
-        return $this->remove($id, true);
+        return $this->remove($id_product, true);
     }
 
     public function clear(): void
