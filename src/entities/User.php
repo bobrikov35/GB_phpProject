@@ -10,11 +10,19 @@ namespace app\entities;
 class User extends Entity
 {
 
+    /**
+     * С В О Й С Т В А
+     */
+
     private string $name = '';
     private string $email = '';
     private string $password = '';
     private bool $admin = false;
 
+
+    /**
+     * О Б Я З А Т Е Л Ь Н Ы Е   Ф У Н К Ц И И
+     */
 
     /**
      * @return array
@@ -26,6 +34,10 @@ class User extends Entity
         return $vars;
     }
 
+
+    /**
+     * S E T T E R ' Ы
+     */
 
     /**
      * @param mixed $name
@@ -68,6 +80,10 @@ class User extends Entity
         $this->admin = !empty($admin) and $admin;
     }
 
+
+    /**
+     * G E T T E R ' Ы
+     */
 
     /**
      * @return string
