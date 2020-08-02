@@ -75,7 +75,7 @@ class Product extends Service
     /**
      * Сохранение товара
      *
-     * @param int $id    товар
+     * @param int $id
      * @return bool|int
      */
     public function save(int $id)
@@ -90,7 +90,7 @@ class Product extends Service
     }
 
     /**
-     * @param int $id    товар
+     * @param int $id
      * @return bool
      */
     public function delete(int $id): bool
