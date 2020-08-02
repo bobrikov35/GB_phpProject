@@ -45,61 +45,51 @@ abstract class Repository
      * С И Н Т А К С И Ч Е С К И Й   С А Х А Р
      */
 
-    /**
-     * @return DB
-     */
     protected function getDatabase(): DB
     {
         return $this->container->database;
     }
 
-    /**
-     * @param string $sql
-     * @param array $params
-     * @return array
-     */
+    protected function getPost(string $param)
+    {
+        return $this->container->request->getPost($param);
+    }
+
+    protected function getSession(string $param)
+    {
+        return $this->container->request->getSession($param);
+    }
+
+    protected function isAdmin(): bool
+    {
+        return $this->container->authorization->isAdmin();
+    }
+
+    protected function isLogin(): bool
+    {
+        return $this->container->authorization->isLogin();
+    }
+
     protected function readItem(string $sql, array $params = []): array
     {
         return $this->container->database->readItem($sql, $params);
     }
 
-    /**
-     * @param string $sql
-     * @param string $class
-     * @param array $params
-     * @return Entity|null
-     */
     protected function readObject(string $sql, string $class, array $params = [])
     {
         return $this->container->database->readObject($sql, $class, $params);
     }
 
-    /**
-     * @param string $sql
-     * @param array $params
-     * @return array
-     */
     protected function readTable(string $sql, array $params = []): array
     {
         return $this->container->database->readTable($sql, $params);
     }
 
-    /**
-     * @param string $sql
-     * @param string $class
-     * @param array $params
-     * @return Entity[]|array
-     */
     protected function readObjectList(string $sql, string $class, array $params = []): array
     {
         return $this->container->database->readObjectList($sql, $class, $params);
     }
 
-    /**
-     * @param string $sql
-     * @param array $params
-     * @return bool|PDOStatement
-     */
     protected function execute(string $sql, array $params = [])
     {
         return $this->container->database->execute($sql, $params);
@@ -161,7 +151,7 @@ abstract class Repository
      * Возвращает объект из базы данных по id
      *
      * @param int $id
-     * @return mixed
+     * @return Entity|null
      */
     public function getSingle(int $id)
     {
