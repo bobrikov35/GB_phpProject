@@ -10,14 +10,26 @@ namespace app\entities;
 abstract class Entity
 {
 
+    /**
+     * С В О Й С Т В А
+     */
+
     protected int $id = 0;
 
+
+    /**
+     * А Б С Т Р А К Т Н Ы Е   Ф У Н К Ц И И
+     */
 
     /**
      * @return array
      */
     abstract public function getVars(): array;
 
+
+    /**
+     * S E T T E R ' Ы
+     */
 
     /**
      * @param mixed $id
@@ -30,6 +42,10 @@ abstract class Entity
         }
     }
 
+
+    /**
+     * G E T T E R ' Ы
+     */
 
     /**
      * @return int
