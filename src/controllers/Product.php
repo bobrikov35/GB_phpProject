@@ -200,7 +200,7 @@ class Product extends Controller
      */
     private function getProduct()
     {
-        return $this->app->serviceProduct->getProduct();
+        return $this->app->serviceProduct->getProduct($this->getId());
     }
 
     /**
