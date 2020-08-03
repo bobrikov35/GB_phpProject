@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\entities\{Entity, Product as EProduct};
+use app\entities\Product as EProduct;
 
 
 /**
@@ -41,7 +41,7 @@ class Product extends Controller
      */
     protected function table_action()
     {
-        if (!$this->isAdmin()) {
+        if (!$this->permission('admin')) {
             $this->toLocation('/product/list/?page=1');
             return;
         }
@@ -56,8 +56,7 @@ class Product extends Controller
     protected function single_action()
     {
         $config = $this->getConfig();
-        $config['product'] = $this->getSingleProduct($this->getId());
-        if (empty($config['product'])) {
+        if ($config['product'] = $this->getProduct()) {
             $this->toLocation('/product/list/?page=1');
             return;
         }
@@ -71,7 +70,7 @@ class Product extends Controller
      */
     protected function create_action()
     {
-        if (!$this->isAdmin()) {
+        if (!$this->permission('admin')) {
             $this->toLocation('/product/list/?page=1');
             return;
         }
@@ -80,7 +79,7 @@ class Product extends Controller
             $config['product'] = new EProduct();
             return $this->render('product/edit.twig', $config);
         }
-        return $this->save($this->getId());
+        return $this->save($config);
     }
 
     /**
@@ -90,7 +89,7 @@ class Product extends Controller
      */
     protected function update_action()
     {
-        if (!$this->isAdmin()) {
+        if (!$this->permission('admin')) {
             $this->toLocation('/product/list/?page=1');
             return;
         }
@@ -101,10 +100,10 @@ class Product extends Controller
         $config = $this->getConfigForEdit("/product/update/?id={$this->getId()}",
             'Редактирование товара', 'Сохранить изменения', true);
         if (empty($this->getPost())) {
-            $config['product'] = $this->getSingleProduct($this->getId());
+            $config['product'] = $this->getProduct();
             return $this->render('product/edit.twig', $config);
         }
-        return $this->save($this->getId());
+        return $this->save($config);
     }
 
     /**
@@ -112,15 +111,12 @@ class Product extends Controller
      */
     protected function delete_action(): void
     {
-        if (!$this->isAdmin()) {
+        if (!$this->permission('admin')) {
             $this->toLocation('/product/list/?page=1');
             return;
         }
-        if ($this->deleteProduct($this->getId())) {
-            $this->toLocation('/product/table/?page=1');
-            return;
-        }
-        $this->toLocation();
+        $this->deleteProduct();
+        $this->toLocation('/product/table/?page=1');
     }
 
 
@@ -170,17 +166,16 @@ class Product extends Controller
     /**
      * Сохраняет переданные данные
      *
-     * @param int $id
+     * @param array $config
      * @return string|void
      */
-    private function save(int $id)
+    private function save(array &$config)
     {
-        if ($this->checkRequiredParams() and $this->saveProduct($id)) {
+        if ($this->checkRequiredParams() and $this->saveProduct()) {
             $this->toLocation('/product/table/?page=1');
             return;
         }
-        $config['product'] = new EProduct();
-        $this->fillProductFromPost($config['product']);
+        $config['product'] = $this->getProductFromPost();
         return $this->render('product/edit.twig', $config);
     }
 
@@ -201,38 +196,35 @@ class Product extends Controller
      */
 
     /**
-     * @param int $id
-     * @return EProduct|Entity|null
+     * @return EProduct|null
      */
-    private function getSingleProduct(int $id)
+    private function getProduct()
     {
-        return $this->app->repositoryProduct->getSingle($id);
+        return $this->app->serviceProduct->getProduct();
     }
 
     /**
-     * @param EProduct $product
+     * @return EProduct|null
      */
-    private function fillProductFromPost(EProduct $product): void
+    private function getProductFromPost()
     {
-        $this->app->serviceProduct->fillProductFromPost($product);
+        return $this->app->serviceProduct->getProductFromPost();
     }
 
     /**
-     * @param int $id
      * @return bool|int
      */
-    private function saveProduct(int $id)
+    private function saveProduct()
     {
-        return $this->app->serviceProduct->save($id);
+        return $this->app->serviceProduct->save($this->getId());
     }
 
     /**
-     * @param int $id
      * @return bool
      */
-    private function deleteProduct(int $id): bool
+    private function deleteProduct(): bool
     {
-        return $this->app->serviceProduct->delete($id);
+        return $this->app->serviceProduct->delete($this->getId());
     }
 
 }
