@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\entities\Product as EProduct;
+use app\entities\{Entity, Product as EProduct};
 
 
 /**
@@ -12,55 +12,51 @@ use app\entities\Product as EProduct;
 class Product extends Controller
 {
 
+    /**
+     * Д Е Й С Т В И Я
+     */
+
+    /**
+     * Действие по умолчанию
+     */
     protected function default_action()
     {
         $this->toLocation('/product/list/?page=1');
     }
 
     /**
-     * @param string $action
-     * @return array
-     */
-    private function getListConfig(string $action): array
-    {
-        $this->app->paginator->setPath("/product/{$action}/?page=");
-        $this->app->paginator->setItems($this->app->repositoryProduct, $this->getPage());
-        $config = $this->getConfig();
-        $config['goods'] = $this->app->paginator->getItems();
-        $config['count'] = count($config['goods']);
-        $config['pages'] = [
-            'list' => $this->app->paginator->getUrls(),
-            'current' => $this->getPage(),
-        ];
-        $config['pages']['count'] = count($config['pages']['list']);
-        return $config;
-    }
-
-    /**
-     * @return mixed
+     * Выводит список товаров
+     *
+     * @return string
      */
     protected function list_action()
     {
-        $config = $this->getListConfig('list');
-        return $this->render('product/index.twig', $config);
+        return $this->render('product/index.twig', $this->getConfigForLists('list'));
     }
 
     /**
-     * @return mixed
+     * Выводит список товаров с возможностью создания, редактирования и удаления (для админа)
+     *
+     * @return string|void
      */
     protected function table_action()
     {
-        $config = $this->getListConfig('table');
-        return $this->render('product/table.twig', $config);
+        if (!$this->isAdmin()) {
+            $this->toLocation('/product/list/?page=1');
+            return;
+        }
+        return $this->render('product/table.twig', $this->getConfigForLists('table'));
     }
 
     /**
-     * @return mixed|void
+     * Выводит одиночный товар
+     *
+     * @return string|void
      */
     protected function single_action()
     {
         $config = $this->getConfig();
-        $config['product'] = $this->app->repositoryProduct->getSingle($this->getId());
+        $config['product'] = $this->getSingleProduct($this->getId());
         if (empty($config['product'])) {
             $this->toLocation('/product/list/?page=1');
             return;
@@ -69,80 +65,174 @@ class Product extends Controller
     }
 
     /**
-     * @return bool
-     */
-    private function checkRequiredParams(): bool
-    {
-        return !empty($this->request->getPost('name'))
-                and !empty($this->request->getPost('title'));
-    }
-
-    /**
-     * @return mixed|void
+     * Возвращает форму для создания товара или создает его
+     *
+     * @return string|void
      */
     protected function create_action()
     {
-        if (!$this->app->authorization->isAdmin()) {
+        if (!$this->isAdmin()) {
             $this->toLocation('/product/list/?page=1');
+            return;
         }
-        $config = $this->getConfig();
-        $config['action'] = '/product/create';
-        $config['title'] = 'Добавление товара';
-        $config['buttonTitle'] = 'Добавить';
-        $config['showId'] = false;
-        if (empty($this->request->getPost())) {
+        $config = $this->getConfigForEdit('/product/create', 'Добавление товара', 'Добавить');
+        if (empty($this->getPost())) {
             $config['product'] = new EProduct();
             return $this->render('product/edit.twig', $config);
         }
-        if ($this->checkRequiredParams() and $this->app->serviceProduct->save($this->getId())) {
-            $this->toLocation('/product/table');
-            return;
-        }
-        $config['product'] = new EProduct();
-        $this->app->serviceProduct->fillProductFromPost($config['product']);
-        return $this->render('product/edit.twig', $config);
+        return $this->save($this->getId());
     }
 
     /**
-     * @return mixed|void
+     * Возвращает форму для редактирования товара или изменяет его
+     *
+     * @return string|void
      */
     protected function update_action()
     {
-        if (!$this->app->authorization->isAdmin()) {
+        if (!$this->isAdmin()) {
             $this->toLocation('/product/list/?page=1');
+            return;
         }
-        $config = $this->getConfig();
-        $config['action'] = "/product/update/?id={$this->getId()}";
-        $config['title'] = 'Редактирование товара';
-        $config['buttonTitle'] = 'Сохранить изменения';
-        $config['showId'] = true;
         if (empty($this->getId())) {
             $this->toLocation('/product/create');
             return;
         }
-        if (empty($this->request->getPost())) {
-            $config['product'] = $this->app->repositoryProduct->getSingle($this->getId());
+        $config = $this->getConfigForEdit("/product/update/?id={$this->getId()}",
+            'Редактирование товара', 'Сохранить изменения', true);
+        if (empty($this->getPost())) {
+            $config['product'] = $this->getSingleProduct($this->getId());
             return $this->render('product/edit.twig', $config);
         }
-        if ($this->checkRequiredParams() and $this->app->serviceProduct->save($this->getId())) {
-            $this->toLocation('/product/table/?page=1');
-            return;
-        }
-        $config['product'] = new EProduct();
-        $this->app->serviceProduct->fillProductFromPost($config['product']);
-        return $this->render('product/edit.twig', $config);
+        return $this->save($this->getId());
     }
 
+    /**
+     * Удаляет товар
+     */
     protected function delete_action(): void
     {
-        if (!$this->app->authorization->isAdmin()) {
+        if (!$this->isAdmin()) {
             $this->toLocation('/product/list/?page=1');
+            return;
         }
-        if ($this->app->serviceProduct->delete($this->getId())) {
+        if ($this->deleteProduct($this->getId())) {
             $this->toLocation('/product/table/?page=1');
             return;
         }
         $this->toLocation();
+    }
+
+
+    /**
+     * П Р И В А Т Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Возвращает конфигурацию для списков
+     *
+     * @param string $action
+     * @return array
+     */
+    private function getConfigForLists(string $action): array
+    {
+        $config = $this->getConfig();
+        $this->configurePaginator($this->app->repositoryProduct, "/product/{$action}/?page=", $this->getPage());
+        $config['goods'] = $this->paginator->getItems();
+        $config['count'] = count($config['goods']);
+        $config['pages'] = [
+            'links' => $this->app->paginator->getUrls(),
+            'current' => $this->getPage(),
+        ];
+        $config['pages']['count'] = count($config['pages']['links']);
+        return $config;
+    }
+
+    /**
+     * Возвращает конфигурацию для редактирования
+     *
+     * @param string $action
+     * @param string $title
+     * @param string $buttonTitle
+     * @param bool $showId
+     * @return array
+     */
+    private function getConfigForEdit(string $action, string $title, string $buttonTitle, bool $showId = false): array
+    {
+        $config = $this->getConfig();
+        $config['action'] = $action;
+        $config['title'] = $title;
+        $config['buttonTitle'] = $buttonTitle;
+        $config['showId'] = $showId;
+        return $config;
+    }
+
+    /**
+     * Сохраняет переданные данные
+     *
+     * @param int $id
+     * @return string|void
+     */
+    private function save(int $id)
+    {
+        if ($this->checkRequiredParams() and $this->saveProduct($id)) {
+            $this->toLocation('/product/table/?page=1');
+            return;
+        }
+        $config['product'] = new EProduct();
+        $this->fillProductFromPost($config['product']);
+        return $this->render('product/edit.twig', $config);
+    }
+
+    /**
+     * Проверяет наличие обязательных параметров для добавления и изменения
+     *
+     * @return bool
+     */
+    private function checkRequiredParams(): bool
+    {
+        return !empty($this->getPost('name')) and !empty($this->getPost('title'));
+    }
+
+
+
+    /**
+     * С И Н Т А К С И Ч Е С К И Й   С А Х А Р
+     */
+
+    /**
+     * @param int $id
+     * @return EProduct|Entity|null
+     */
+    private function getSingleProduct(int $id)
+    {
+        return $this->app->repositoryProduct->getSingle($id);
+    }
+
+    /**
+     * @param EProduct $product
+     */
+    private function fillProductFromPost(EProduct $product): void
+    {
+        $this->app->serviceProduct->fillProductFromPost($product);
+    }
+
+    /**
+     * @param int $id
+     * @return bool|int
+     */
+    private function saveProduct(int $id)
+    {
+        return $this->app->serviceProduct->save($id);
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     */
+    private function deleteProduct(int $id): bool
+    {
+        return $this->app->serviceProduct->delete($id);
     }
 
 }
