@@ -12,111 +12,170 @@ use app\entities\User as EUser;
 class User extends Controller
 {
 
+    /**
+     * Д Е Й С Т В И Я
+     */
+
+    /**
+     * Действие по умолчанию
+     */
     protected function default_action()
     {
-        if ($this->app->authorization->isLogin()) {
-            $this->request->toLocation('/user/account/');
+        if ($this->isLogin()) {
+            $this->toLocation('/user/account/');
             return;
         }
-        $this->request->toLocation('/user/login/');
+        $this->toLocation('/user/login/');
+    }
+
+    /**
+     * Выводит личный кабинет пользователя
+     *
+     * @return string|void
+     */
+    protected function account_action()
+    {
+        if (!$this->isLogin()) {
+            $this->toLocation('/user/login/');
+            return;
+        }
+        $config = $this->getConfig();
+        $config['user'] = $this->getUser();
+        $config['admin'] = $this->getUser('admin') ? 'присутствуют' : 'отсутствуют';
+        return $this->render('account/index.twig', $config);
+    }
+
+    /**
+     * Возвращает форму входа в личный кабинет или выполняет вход
+     *
+     * @return string|void
+     */
+    protected function login_action()
+    {
+        if ($this->isLogin()) {
+            $this->toLocation('/user/account/');
+            return;
+        }
+        $config = $this->getConfig();
+        if (empty($this->getPost())) {
+            $config['user'] = new EUser();
+            return $this->render('account/login.twig', $config);
+        }
+        $config['user'] = $this->getUserFromPost();
+        if (empty($config['user']->getEmail()) or empty($config['user']->getPassword())) {
+            return $this->render('account/login.twig', $config);
+        }
+        if ($this->login($config['user'])) {
+            $this->toLocation('/user/account');
+            return;
+        }
+        return $this->render('account/login.twig', $config);
+    }
+
+    /**
+     * Выполняет выход из личного кабинета
+     */
+    protected function logout_action()
+    {
+        $this->logout();
+        $this->toLocation();
+    }
+
+    /**
+     * Возвращает форму для создания аккаунта или создает его
+     *
+     * @return string|void
+     */
+    protected function create_action()
+    {
+        $config = $this->getConfig();
+        if (empty($this->getPost())) {
+            $config['user'] = new EUser();
+            return $this->render('account/create.twig', $config);
+        }
+        if ($this->checkRequiredParams() and $this->saveUser()) {
+            $this->toLocation('/user/account');
+            return;
+        }
+        $config['user'] = $this->getUserFromPost();
+        return $this->render('account/edit.twig', $config);
+    }
+
+    /**
+     * Удаляет аккаунт
+     */
+    protected function delete_action()
+    {
+        if (!$this->isLogin()) {
+            $this->toLocation('/user/login');
+            return;
+        }
+        if ($this->deleteUser()) {
+            $this->logout();
+            $this->toLocation('/user/login');
+            return;
+        }
+        $this->toLocation('/user/account');
+    }
+
+
+    /**
+     * П Р И В А Т Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Проверка заполненности обязательных параметров
+     *
+     * @return bool
+     */
+    private function checkRequiredParams(): bool
+    {
+        return !empty($this->getPost('name')) and !empty($this->getPost('email'))
+            and !empty($this->getPost('password'));
+    }
+
+
+
+    /**
+     * С И Н Т А К С И Ч Е С К И Й   С А Х А Р
+     */
+
+    /**
+     * @param EUser $user
+     * @return bool
+     */
+    private function login(EUser $user): bool
+    {
+        return $this->app->authorization->login($user->getEmail(), $user->getPassword());
+    }
+
+    private function logout()
+    {
+        $this->app->authorization->logout();
+    }
+
+    /**
+     * @return EUser
+     */
+    private function getUserFromPost()
+    {
+        return $this->app->serviceUser->getUserFromPost();
+    }
+
+    /**
+     * @return bool|int
+     */
+    private function saveUser()
+    {
+        return $this->app->serviceUser->save();
     }
 
     /**
      * @return bool
      */
-    private function checkRequiredParams(): bool
+    private function deleteUser(): bool
     {
-        return !empty($this->request->getPost('name'))
-            and !empty($this->request->getPost('email'));
+        return $this->app->serviceUser->delete($this->getUser('id'));
     }
-
-    /**
-     * @return mixed|void
-     */
-    protected function account_action()
-    {
-        if (!$this->app->authorization->isLogin()) {
-            $this->request->toLocation('/user/login/');
-            return;
-        }
-        $config = $this->getConfig();
-        $config['user'] = $this->request->getSession('user');
-        $config['admin'] = $config['user']['admin'] ? 'присутствуют' : 'отсутствуют';
-        return $this->render('account/index.twig', $config);
-    }
-
-    /**
-     * @return mixed|void
-     */
-    protected function login_action()
-    {
-        $config = $this->getConfig();
-        if ($this->app->authorization->isLogin()) {
-            $this->request->toLocation('/user/account/');
-            return;
-        }
-        $config['user'] = new EUser();
-        if (empty($this->request->getPost())) {
-            return $this->render('account/login.twig', $config);
-        }
-        $config['user']->setEmail($this->request->getPost('email'));
-        $config['user']->setPassword($this->request->getPost('password'));
-        if (empty($config['user']->getEmail()) or empty($config['user']->getPassword())) {
-            return $this->render('account/login.twig', $config);
-        }
-        if (!$this->app->authorization->login($config['user']->getEmail(), $config['user']->getPassword())) {
-            return $this->render('account/login.twig', $config);
-        }
-        $this->toLocation('/user/login');
-    }
-
-    protected function logout_action()
-    {
-        $this->app->authorization->logout();
-        $this->toLocation();
-    }
-
-//    protected function create_action()
-//    {
-//        if (empty($this->request->getPost())) {
-//            $config['product'] = new EProduct();
-//            return $this->render('product/edit.twig', $config);
-//        }
-//        if ($this->checkRequiredParams() and $this->app->serviceProduct->save($this->getId())) {
-//            $this->toLocation('/product/table');
-//            return;
-//        }
-//        $config['product'] = new EProduct();
-//        $this->app->serviceProduct->fillProductFromPost($config['product']);
-//        return $this->render('product/edit.twig', $config);
-//    }
-
-//    function create_action(bool $admin = false): void
-//    {
-//        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-//            echo render('account/create.twig', [
-//                'title' => 'Создание аккаунта',
-//                'styles' => '<link rel="stylesheet" type="text/css" href="/css/account.css?t=' . POSTFIX . '">',
-//            ]);
-//            return;
-//        }
-//        if (empty($_POST['name']) or empty($_POST['email']) or empty($_POST['password'])) {
-//            sessionLogout();
-//            changeLocation('/?p=account&a=create');
-//            return;
-//        }
-//        $admin = $admin ? 1 : 0;
-//        $password = password_hash(joinSol($_POST['password']), PASSWORD_DEFAULT );
-//        $sql = "INSERT INTO `users` (`name`, `email`, `password`, `admin`)
-//            VALUES ('{$_POST['name']}', '{$_POST['email']}', '{$password}', {$admin})";
-//        $result = mysqli_query(getDatabase(), $sql);
-//        if ($result) {
-//            sessionLogin($_POST['name'], $_POST['email']);
-//            changeLocation('/?p=account');
-//            return;
-//        }
-//        sessionLogout();
-//        changeLocation('/?p=account&a=create');
-//    }
 
 }
