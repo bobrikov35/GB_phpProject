@@ -204,7 +204,7 @@ class Product extends Controller
     }
 
     /**
-     * @return EProduct|null
+     * @return EProduct
      */
     private function getProductFromPost()
     {
