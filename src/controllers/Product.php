@@ -57,10 +57,9 @@ class Product extends Controller
     {
         $config = $this->getConfig();
         if ($config['product'] = $this->getProduct()) {
-            $this->toLocation('/product/list/?page=1');
-            return;
+            return $this->render('product/single.twig', $config);
         }
-        return $this->render('product/single.twig', $config);
+        $this->toLocation('/product/list/?page=1');
     }
 
     /**
