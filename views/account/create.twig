@@ -1,7 +1,7 @@
 {% extends 'layouts/main.twig' %}
 
 {% block style %}
-    <link rel="stylesheet" href="/css/accountCreate.css?t={{ time }}">
+    <link rel="stylesheet" href="/css/accountEdit.css?t={{ time }}">
 {% endblock %}
 
 {% block title %}Создание аккаунта{% endblock %}
@@ -14,23 +14,23 @@
 
     <form class="content" method="post">
 
-        <span>
-            <label class="content__label" for="name">Name: </label>
+        <div>
+            <label class="content__label" for="name">Имя: </label>
             <input class="content__edit" type="text" name="name" id="name" value="{{ user.name }}"
                    placeholder="Введите имя" required>
-        </span>
+        </div>
 
-        <span>
+        <div>
             <label class="content__label" for="email">Email: </label>
             <input class="content__edit" type="email" name="email" id="email" value="{{ user.email }}"
                    placeholder="Введите email" required>
-        </span>
+        </div>
 
-        <span>
+        <div>
             <label class="content__label" for="password">Пароль: </label>
             <input class="content__edit" type="password" name="password" id="password" value="{{ user.password }}"
                    placeholder="Введите пароль" required>
-        </span>
+        </div>
 
         <div class="content__control">
             <button class="button content__button" type="submit">Создать</button>

@@ -1,7 +1,7 @@
 {% extends 'layouts/main.twig' %}
 
 {% block style %}
-    <link rel="stylesheet" href="/css/accountLogin.css?t={{ time }}">
+    <link rel="stylesheet" href="/css/accountEdit.css?t={{ time }}">
 {% endblock %}
 
 {% block title %}Вход в аккаунт{% endblock %}
@@ -28,7 +28,7 @@
 
         <div class="content__control">
             <button class="button content__button" type="submit">Войти</button>
-            <a class="button content__link" href="/account/create">Создать аккаунт</a>
+            <a class="button content__link" href="/user/create">Создать аккаунт</a>
         </div>
 
     </form>
