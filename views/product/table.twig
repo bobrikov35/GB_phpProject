@@ -60,7 +60,7 @@
                 <i class="fa fa-chevron-left"></i>
             </a>
 
-            {% for page, link in pages.list %}
+            {% for page, link in pages.links %}
                 {% if page != pages.current %}
                     <a class="paginator__link" href="{{ link }}">{{ page }}</a>
                 {% else %}
