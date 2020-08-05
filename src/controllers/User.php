@@ -69,7 +69,7 @@ class User extends Controller
             $this->toLocation('/user/account');
             return;
         }
-        return $this->render('account/login.twig', $config);
+        return $this->render('/account/login.twig', $config);
     }
 
     /**
@@ -98,7 +98,7 @@ class User extends Controller
             return;
         }
         $config['user'] = $this->getUserFromPost();
-        return $this->render('account/edit.twig', $config);
+        return $this->render('account/create.twig', $config);
     }
 
     /**
