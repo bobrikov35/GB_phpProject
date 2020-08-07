@@ -2,7 +2,6 @@
 
 namespace app\repositories;
 
-use \PDOStatement;
 use app\engine\Container;
 use app\services\DB;
 use app\entities\Entity;
@@ -39,61 +38,6 @@ abstract class Repository
      * @return string
      */
     abstract protected function getEntityName(): string;
-
-
-    /**
-     * С И Н Т А К С И Ч Е С К И Й   С А Х А Р
-     */
-
-    protected function getDatabase(): DB
-    {
-        return $this->container->database;
-    }
-
-    protected function getPost(string $param)
-    {
-        return $this->container->request->getPost($param);
-    }
-
-    protected function getSession(string $param)
-    {
-        return $this->container->request->getSession($param);
-    }
-
-    protected function isAdmin(): bool
-    {
-        return $this->container->authorization->isAdmin();
-    }
-
-    protected function isLogin(): bool
-    {
-        return $this->container->authorization->isLogin();
-    }
-
-    protected function readItem(string $sql, array $params = []): array
-    {
-        return $this->container->database->readItem($sql, $params);
-    }
-
-    protected function readObject(string $sql, string $class, array $params = [])
-    {
-        return $this->container->database->readObject($sql, $class, $params);
-    }
-
-    protected function readTable(string $sql, array $params = []): array
-    {
-        return $this->container->database->readTable($sql, $params);
-    }
-
-    protected function readObjectList(string $sql, string $class, array $params = []): array
-    {
-        return $this->container->database->readObjectList($sql, $class, $params);
-    }
-
-    protected function execute(string $sql, array $params = [])
-    {
-        return $this->container->database->execute($sql, $params);
-    }
 
 
     /**
@@ -287,6 +231,52 @@ abstract class Repository
             return true;
         }
         return false;
+    }
+
+
+
+    /**
+     * С И Н Т А К С И Ч Е С К И Й   С А Х А Р
+     */
+
+    protected function getDatabase(): DB
+    {
+        return $this->container->database;
+    }
+
+    protected function getPost(string $param)
+    {
+        return $this->container->request->getPost($param);
+    }
+
+    protected function getSession(string $param)
+    {
+        return $this->container->request->getSession($param);
+    }
+
+    protected function readItem(string $sql, array $params = []): array
+    {
+        return $this->container->database->readItem($sql, $params);
+    }
+
+    protected function readObject(string $sql, string $class, array $params = [])
+    {
+        return $this->container->database->readObject($sql, $class, $params);
+    }
+
+    protected function readTable(string $sql, array $params = []): array
+    {
+        return $this->container->database->readTable($sql, $params);
+    }
+
+    protected function readObjectList(string $sql, string $class, array $params = []): array
+    {
+        return $this->container->database->readObjectList($sql, $class, $params);
+    }
+
+    protected function execute(string $sql, array $params = [])
+    {
+        return $this->container->database->execute($sql, $params);
     }
 
 }
