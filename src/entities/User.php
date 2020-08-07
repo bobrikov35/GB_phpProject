@@ -44,10 +44,7 @@ class User extends Entity
      */
     public function setName($name): void
     {
-        $this->name = '';
-        if (!empty($name)) {
-            $this->name = (string)$name;
-        }
+        $this->name = !empty($name) ? (string)$name : '';
     }
 
     /**
@@ -55,10 +52,7 @@ class User extends Entity
      */
     public function setEmail($email): void
     {
-        $this->email = '';
-        if (!empty($email)) {
-            $this->email = (string)$email;
-        }
+        $this->email = !empty($email) ? (string)$email : '';
     }
 
     /**
@@ -66,10 +60,7 @@ class User extends Entity
      */
     public function setPassword($password): void
     {
-        $this->password = '';
-        if (!empty($password)) {
-            $this->password = (string)$password;
-        }
+        $this->password = !empty($password) ? (string)$password : '';
     }
 
     /**
