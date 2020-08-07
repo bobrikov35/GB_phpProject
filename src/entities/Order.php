@@ -32,6 +32,9 @@ class Order extends Entity
     {
         $vars = get_object_vars($this);
         unset($vars['id']);
+        unset($vars['count']);
+        unset($vars['quantity']);
+        unset($vars['cost']);
         unset($vars['goods']);
         return $vars;
     }
@@ -50,35 +53,12 @@ class Order extends Entity
     }
 
     /**
-     * @param mixed $count
-     */
-    public function setCount($count): void
-    {
-        $this->count = !empty($count) and is_numeric($count) ? (int)$count : 0;
-    }
-
-    /**
-     * @param mixed $quantity
-     */
-    public function setQuantity($quantity): void
-    {
-        $this->quantity = !empty($quantity) and is_numeric($quantity) ? (int)$quantity : 0;
-    }
-
-    /**
-     * @param mixed $cost
-     */
-    public function setCost($cost): void
-    {
-        $this->cost = !empty($cost) and is_numeric($cost) ? (int)$cost : 0;
-    }
-
-    /**
      * @param array $goods
      */
     public function setGoods(array $goods): void
     {
         $this->goods = !empty($goods) ? $goods : [];
+        $this->calculate();
     }
 
 
@@ -128,13 +108,13 @@ class Order extends Entity
 
 
     /**
-     * П У Б Л И Ч Н Ы Е   Ф У Н К Ц И И
+     * П Р И В А Т Н Ы Е   Ф У Н К Ц И И
      */
 
     /**
      * Заполняет количество позиций, количество товара и стоимость
      */
-    public function calculate(): void
+    private function calculate(): void
     {
         $this->count = count($this->goods);
         $this->quantity = 0;
