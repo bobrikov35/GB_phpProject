@@ -49,10 +49,7 @@ class Product extends Entity
      */
     public function setName($name): void
     {
-        $this->name = '';
-        if (!empty($name)) {
-            $this->name = (string)$name;
-        }
+        $this->name = !empty($name) ? (string)$name : '';
     }
 
     /**
@@ -60,10 +57,7 @@ class Product extends Entity
      */
     public function setTitle($title): void
     {
-        $this->title = '';
-        if (!empty($title)) {
-            $this->title = (string)$title;
-        }
+        $this->title = !empty($title) ? (string)$title : '';
     }
 
     /**
@@ -71,10 +65,7 @@ class Product extends Entity
      */
     public function setDescription($description): void
     {
-        $this->description = '';
-        if (!empty($description)) {
-            $this->description = (string)$description;
-        }
+        $this->description = !empty($description) ? (string)$description : '';
     }
 
     /**
@@ -82,10 +73,7 @@ class Product extends Entity
      */
     public function setImage($image): void
     {
-        $this->image = '';
-        if (!empty($image)) {
-            $this->image = (string)$image;
-        }
+        $this->image = !empty($image) ? (string)$image : '';
     }
 
     /**
@@ -93,10 +81,7 @@ class Product extends Entity
      */
     public function setPrice($price): void
     {
-        $this->price = 0;
-        if (!empty($price) and is_numeric($price)) {
-            $this->price = (int)$price;
-        }
+        $this->price = !empty($price) and is_numeric($price) ? (int)$price : 0;
     }
 
     /**
@@ -104,10 +89,7 @@ class Product extends Entity
      */
     public function setImages(array $images): void
     {
-        $this->images = [];
-        if (!empty($images)) {
-            $this->images = $images;
-        }
+        $this->images = !empty($images) ? $images : [];
     }
 
     /**
@@ -115,10 +97,8 @@ class Product extends Entity
      */
     public function setImagesFromString(string $images): void
     {
-        $this->images = [];
-        if (!empty($images) and $imagesList = explode(PHP_EOL, $images)) {
-            $this->images = $imagesList;
-        }
+        $imagesList = explode(PHP_EOL, $images);
+        $this->images = !empty($imagesList) ? $imagesList : [];
     }
 
     /**
@@ -126,10 +106,7 @@ class Product extends Entity
      */
     public function setFeedbacks(array $feedbacks): void
     {
-        $this->feedbacks = [];
-        if (!empty($feedbacks)) {
-            $this->feedbacks = $feedbacks;
-        }
+        $this->feedbacks = !empty($feedbacks) ? $feedbacks : [];
     }
 
 
