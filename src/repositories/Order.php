@@ -89,9 +89,6 @@ class Order extends Repository
      */
     public function getQuantityItems(): int
     {
-        if (!$this->isLogin()) {
-            return 0;
-        }
         $user = $this->getUser();
         return $this->getQuantity($user['id']);
     }
@@ -106,9 +103,6 @@ class Order extends Repository
      */
     public function getItemsByPage(int $page = 1, int $quantity = 9, bool $all = false): array
     {
-        if (!$this->isLogin()) {
-            return [];
-        }
         if ($page < 1) {
             $page = 1;
         }
