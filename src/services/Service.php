@@ -48,4 +48,19 @@ abstract class Service
         $this->request = $container->request;
     }
 
+
+
+    /**
+     * С И Н Т А К С И Ч Е С К И Й   С А Х А Р
+     */
+
+    /**
+     * @param string $param
+     * @return array|mixed|null
+     */
+    protected function getPost(string $param = '')
+    {
+        return $this->container->request->getPost($param);
+    }
+
 }
