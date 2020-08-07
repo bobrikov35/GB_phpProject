@@ -126,4 +126,26 @@ class Order extends Entity
         return $this->goods;
     }
 
+
+    /**
+     * П У Б Л И Ч Н Ы Е   Ф У Н К Ц И И
+     */
+
+    /**
+     * Заполняет количество позиций, количество товара и стоимость
+     */
+    public function calculate(): void
+    {
+        $this->count = count($this->goods);
+        $this->quantity = 0;
+        $this->cost = 0;
+        if (empty($this->count)) {
+            return;
+        }
+        foreach ($this->goods as $product) {
+            $this->quantity += (int)$product['quantity'];
+            $this->cost += (int)$product['price'];
+        }
+    }
+
 }
