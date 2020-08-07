@@ -159,7 +159,7 @@ class DB extends Service
     {
         if ($this->query($sql, $params)) {
             return true;
-        };
+        }
         return false;
     }
 
