@@ -130,6 +130,27 @@ class Request extends Service
     }
 
     /**
+     * Возвращает данные текущего пользователя
+     *
+     * @param string $key
+     * @return array|mixed|null
+     */
+    public function getUser(string $key = '')
+    {
+        $user = $this->getSession('user');
+        if (empty($user)) {
+            return null;
+        }
+        if (empty($key)) {
+            return $user;
+        }
+        if (empty($user[$key])) {
+            return null;
+        }
+        return $user[$key];
+    }
+
+    /**
      * Возвращает массив (get, post или session) или параметр из массива
      *
      * @param string $list
@@ -173,6 +194,48 @@ class Request extends Service
     }
 
     /**
+     * Проверка на наличие прав администратора
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        $user = $this->getSession('user');
+        return !empty($user) and $user['admin'];
+    }
+
+    /**
+     * Проверка на авторизацию
+     *
+     * @return bool
+     */
+    public function isLogin(): bool
+    {
+        $user = $this->getSession('user');
+        return !empty($user);
+    }
+
+    /**
+     * Проверка на наличие прав
+     *
+     * @param string $rights
+     * @return bool
+     */
+    public function permission(string $rights)
+    {
+        switch ($rights) {
+            case 'admin':
+                return $this->isAdmin();
+            case 'user':
+                return $this->isLogin();
+            case 'guest':
+                return !$this->isLogin();
+            default:
+                return false;
+        }
+    }
+
+    /**
      * Изменение локации (перенаправление)
      *
      * @param string $location
@@ -180,7 +243,7 @@ class Request extends Service
      */
     public function toLocation(string $location = '', string $message = ''): void
     {
-        if ($location != '') {
+        if (!empty($location)) {
             header("location: {$location}");
         } elseif (empty($_SERVER['HTTP_REFERER'])) {
             header("location: /");
