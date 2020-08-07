@@ -55,7 +55,12 @@ class User extends Service
         return $user->getId();
     }
 
-
+    /**
+     * Удаляет пользователя из базы данных
+     *
+     * @param int $id
+     * @return bool
+     */
     public function delete(int $id)
     {
         if (empty($id)) {
@@ -106,7 +111,7 @@ class User extends Service
      * @param string $name
      * @param mixed $value
      */
-    private function setSession(string $name, $value)
+    private function setSession(string $name, $value): void
     {
         $this->container->request->setSession($name, $value);
     }
@@ -142,7 +147,7 @@ class User extends Service
      * @param int $id
      * @return bool
      */
-    private function deleteUser(int $id)
+    private function deleteUser(int $id): bool
     {
         return $this->container->repositoryUser->delete($id);
     }
