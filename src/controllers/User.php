@@ -178,4 +178,21 @@ class User extends Controller
         return $this->app->serviceUser->delete($this->getUser('id'));
     }
 
+
+
+
+
+    /**
+     * Помощник ide (не вызывать)
+     */
+    protected function __ideHelper()
+    {
+        /** Функции вызываются динамически (см. class Controller) */
+        $this->default_action();
+        $this->account_action();
+        $this->login_action();
+        $this->logout_action();
+        $this->create_action();
+        $this->delete_action();
+    }
 }
