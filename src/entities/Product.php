@@ -201,4 +201,15 @@ class Product extends Entity
         return $this->feedbacks;
     }
 
+
+
+    /**
+     * Помощник ide (не вызывать)
+     */
+    protected function __ideHelper()
+    {
+        /** Функция вызывается в шаблоне(см. view/product/edit.twig) */
+        $this->getImagesToString();
+    }
+
 }
