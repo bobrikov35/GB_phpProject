@@ -13,47 +13,6 @@ class Cart extends Service
 {
 
     /**
-     * С И Н Т А К С И Ч Е С К И Й   С А Х А Р
-     */
-
-    /**
-     * @param int $id
-     * @return EProduct|bool
-     */
-    private function getSingleProduct(int $id)
-    {
-        return $this->container->repositoryProduct->getSingle($id);
-    }
-
-    /**
-     * @param string $param
-     * @return mixed
-     */
-    private function getParams(string $param)
-    {
-        return $this->request->getParams('get', $param);
-    }
-
-    /**
-     * @param string $name
-     * @param mixed $value
-     */
-    private function setSession(string $name, $value)
-    {
-        $this->request->setSession($name, $value);
-    }
-
-    /**
-     * @param string $param
-     * @return mixed
-     */
-    private function getSession(string $param)
-    {
-        return $this->request->getSession($param);
-    }
-
-
-    /**
      * П У Б Л И Ч Н Ы Е   Ф У Н К Ц И И
      */
 
@@ -64,10 +23,9 @@ class Cart extends Service
      */
     public function getList(): array
     {
-        $cart = $this->getSession('cart');
-        if (empty($cart)) {
+        if (empty($cart = $this->getCart())) {
             return [];
-        };
+        }
         return $cart;
     }
 
@@ -82,10 +40,7 @@ class Cart extends Service
         if (empty($id_product)) {
             return false;
         }
-        $cart = $this->getSession('cart');
-        if (empty($cart)) {
-            $cart = [];
-        }
+        $cart = $this->getList();
         if (key_exists($id_product, $cart)) {
             $cart[$id_product]['quantity'] += $this->getQuantity();
             $this->setSession('cart', $cart);
@@ -119,8 +74,7 @@ class Cart extends Service
         if (empty($id_product)) {
             return false;
         }
-        $cart = $this->getSession('cart');
-        if (empty($cart)) {
+        if (empty($cart = $this->getCart())) {
             $this->clear();
             return false;
         }
@@ -154,7 +108,7 @@ class Cart extends Service
     /**
      * Возвращает количество товара (для добавления или удаления)
      *
-     * @return int    по умолчанию: 1
+     * @return int
      */
     private function getQuantity(): int
     {
@@ -163,6 +117,47 @@ class Cart extends Service
             return 1;
         }
         return (int)$quantity;
+    }
+
+
+
+    /**
+     * С И Н Т А К С И Ч Е С К И Й   С А Х А Р
+     */
+
+    /**
+     * @param int $id
+     * @return EProduct|bool
+     */
+    private function getSingleProduct(int $id)
+    {
+        return $this->container->repositoryProduct->getSingle($id);
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     */
+    private function setSession(string $name, $value)
+    {
+        $this->request->setSession($name, $value);
+    }
+
+    /**
+     * @param string $param
+     * @return array|mixed|null
+     */
+    private function getParams(string $param)
+    {
+        return $this->request->getParams('get', $param);
+    }
+
+    /**
+     * @return array|mixed|null
+     */
+    private function getCart()
+    {
+        return $this->request->getSession('cart');
     }
 
 }
