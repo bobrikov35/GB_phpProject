@@ -36,10 +36,7 @@ abstract class Entity
      */
     public function setId($id): void
     {
-        $this->id = 0;
-        if (!empty($id) and is_numeric($id)) {
-            $this->id = (int)$id;
-        }
+        $this->id = !empty($id) and is_numeric($id) ? (int)$id : 0;
     }
 
 
