@@ -15,6 +15,7 @@ class Order extends Entity
      */
 
     private string $status = 'Передан на обработку';
+    private int $userId = 0;
     private int $count = 0;
     private int $quantity = 0;
     private int $cost = 0;
@@ -53,6 +54,14 @@ class Order extends Entity
     }
 
     /**
+     * @param $userId
+     */
+    public function setUserId($userId): void
+    {
+        $this->userId = !empty($userId) and is_numeric($userId) ? (int)$userId : 0;
+    }
+
+    /**
      * @param array $goods
      */
     public function setGoods(array $goods): void
@@ -72,6 +81,14 @@ class Order extends Entity
     public function getStatus(): string
     {
         return $this->status;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUserId(): int
+    {
+        return $this->userId;
     }
 
     /**
