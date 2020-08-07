@@ -226,4 +226,21 @@ class Product extends Controller
         return $this->app->serviceProduct->delete($this->getId());
     }
 
+
+
+    /**
+     * Помощник ide (не вызывать)
+     */
+    protected function __ideHelper()
+    {
+        /** Функции вызываются динамически (см. class Controller) */
+        $this->default_action();
+        $this->list_action();
+        $this->table_action();
+        $this->single_action();
+        $this->create_action();
+        $this->update_action();
+        $this->delete_action();
+    }
+
 }
