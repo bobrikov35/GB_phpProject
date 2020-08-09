@@ -90,11 +90,20 @@ class Cart extends Service
         return true;
     }
 
+    /**
+     * Удаляет товар из корзины
+     *
+     * @param int $id_product
+     * @return bool
+     */
     public function delete(int $id_product): bool
     {
         return $this->remove($id_product, true);
     }
 
+    /**
+     * Очищает корзину
+     */
     public function clear(): void
     {
         $this->setSession('cart', []);
