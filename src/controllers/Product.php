@@ -29,7 +29,7 @@ class Product extends Controller
      *
      * @return string
      */
-    protected function list_action()
+    protected function list_action(): string
     {
         return $this->render('product/index.twig', $this->getConfigForLists('list'));
     }
@@ -205,7 +205,7 @@ class Product extends Controller
     /**
      * @return EProduct
      */
-    private function getProductFromPost()
+    private function getProductFromPost(): EProduct
     {
         return $this->app->serviceProduct->getProductFromPost();
     }
@@ -231,7 +231,7 @@ class Product extends Controller
     /**
      * Помощник ide (не вызывать)
      */
-    protected function __ideHelper()
+    protected function __ideHelper(): void
     {
         /** Функции вызываются динамически (см. class Controller) */
         $this->default_action();
