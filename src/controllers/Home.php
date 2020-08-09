@@ -27,7 +27,7 @@ class Home extends Controller
      *
      * @return string
      */
-    protected function index_action()
+    protected function index_action(): string
     {
         return $this->render('home.twig', $this->getConfig());
     }
@@ -37,7 +37,7 @@ class Home extends Controller
     /**
      * Помощник ide (не вызывать)
      */
-    protected function __ideHelper()
+    protected function __ideHelper(): void
     {
         /** Функции вызываются динамически (см. class Controller) */
         $this->default_action();
