@@ -100,7 +100,7 @@ abstract class Repository
     public function getSingle(int $id)
     {
         $sql = "SELECT * FROM `{$this->getTableName()}` WHERE `id` = :id";
-        return $this->getDatabase()->readObject($sql, $this->getEntityName(), [':id' => $id]);
+        return $this->readObject($sql, $this->getEntityName(), [':id' => $id]);
     }
 
     /**
