@@ -149,7 +149,7 @@ class User extends Controller
         return $this->app->authorization->login($user->getEmail(), $user->getPassword());
     }
 
-    private function logout()
+    private function logout(): void
     {
         $this->app->authorization->logout();
     }
@@ -157,7 +157,7 @@ class User extends Controller
     /**
      * @return EUser
      */
-    private function getUserFromPost()
+    private function getUserFromPost(): EUser
     {
         return $this->app->serviceUser->getUserFromPost();
     }
@@ -183,7 +183,7 @@ class User extends Controller
     /**
      * Помощник ide (не вызывать)
      */
-    protected function __ideHelper()
+    protected function __ideHelper(): void
     {
         /** Функции вызываются динамически (см. class Controller) */
         $this->default_action();
