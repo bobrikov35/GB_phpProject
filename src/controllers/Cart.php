@@ -23,7 +23,7 @@ class Cart extends Controller
      *
      * @return string
      */
-    protected function list_action()
+    protected function list_action(): string
     {
         $config = $this->getConfig();
         $config['goods'] = $this->getList();
@@ -105,7 +105,7 @@ class Cart extends Controller
         return $this->app->serviceCart->delete($this->getId());
     }
 
-    private function clear()
+    private function clear(): void
     {
         $this->app->serviceCart->clear();
     }
@@ -115,7 +115,7 @@ class Cart extends Controller
     /**
      * Помощник ide (не вызывать)
      */
-    protected function __ideHelper()
+    protected function __ideHelper(): void
     {
         /** Функции вызываются динамически (см. class Controller) */
         $this->default_action();
