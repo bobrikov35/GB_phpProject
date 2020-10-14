@@ -1,0 +1,23 @@
+@font-face {
+  font-family: "Huntsman";
+  src: url("../fonts/Huntsman.otf");
+}
+@font-face {
+  font-family: "Exo";
+  src: url("../fonts/Exo.otf");
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("../fonts/OpenSans.ttf");
+}
+.table__row {
+  grid-template-areas: "id  img img img ttl ttl ttl ttl ttl ttl ttl ttl cst cst cst cst" "id  img img img ttl ttl ttl ttl ttl ttl ttl ttl cst cst cst cst" "id  img img img qnt qnt qnt prc prc prc prc prc cst cst cst cst";
+}
+.table__cost {
+  font-size: 24px;
+}
+.table__head {
+  font-size: 18px;
+}
+
+/*# sourceMappingURL=orderSingle.css.map */

@@ -29,5 +29,12 @@
   border-bottom: solid #e6e09a 1px;
   padding-bottom: 3px;
 }
+.content__control {
+  display: flex;
+  margin-top: 24px;
+}
+.content__link {
+  width: 244px;
+}
 
 /*# sourceMappingURL=account.css.map */

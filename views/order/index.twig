@@ -1,0 +1,78 @@
+{% extends 'layouts/main.twig' %}
+
+{% block style %}
+    <link rel="stylesheet" href="/css/order.css?t={{ time }}">
+    <link rel="stylesheet" href="/css/paginator.css?t={{ time }}">
+{% endblock %}
+
+{% block title %}Заказы{% endblock %}
+
+{% block content %}
+
+    <div class="title">
+        <h2 class="title__text">Заказы</h2>
+    </div>
+
+    {% if orders != [] %}
+
+        <table class="table">
+            <tr class="table__header">
+                <th class="table__column">Номер заказа</th>
+                <th class="table__column">Позиции</th>
+                <th class="table__column">Количество</th>
+                <th class="table__column">Общая стоимость</th>
+                <th class="table__column">Статус</th>
+                <th class="table__column">Действия</th>
+            </tr>
+
+            {% for order in orders %}
+                <tr>
+                    <td class="table__column">{{ order.id }}</td>
+                    <td class="table__column">{{ order.count }}</td>
+                    <td class="table__column">{{ order.quantity }}</td>
+                    <td class="table__column table__price">{{ order.cost }} &#8381;</td>
+                    <td class="table__column table__status">{{ order.status }}</td>
+                    <td class="table__column">
+                        <div class="table__control">
+                            <a class="table__link" href="/order/single/?id={{ order.id }}">
+                                <i class="fa fa-list-alt"></i>
+                            </a>
+                            {% if (order.status != 'Выполнен' and order.status != 'Отменен') %}
+                                <a class="table__link table__link_red" href="/order/cancel/?id={{ order.id }}">
+                                    <i class="fa fa-times-circle"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </table>
+
+        <div class="paginator">
+
+            <a class="button paginator__button" href="/order/list/?page=1">
+                <i class="fa fa-chevron-left"></i>
+            </a>
+
+            {% for page, link in pages.links %}
+                {% if page != pages.current %}
+                    <a class="paginator__link" href="{{ link }}">{{ page }}</a>
+                {% else %}
+                    <p class="paginator__link paginator__link_active">{{ page }}</p>
+                {% endif %}
+            {% endfor %}
+
+            <a class="button paginator__button" href="/order/list/?page={{ pages.count }}">
+                <i class="fa fa-chevron-right"></i>
+            </a>
+
+        </div>
+
+    {% else %}
+
+        <p class="message">У вас нет заказов</p>
+
+    {% endif %}
+
+{% endblock %}

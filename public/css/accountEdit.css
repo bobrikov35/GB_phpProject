@@ -37,6 +37,7 @@
 }
 .content__control {
   display: flex;
+  margin-top: 24px;
 }
 .content__button {
   cursor: pointer;
@@ -48,4 +49,4 @@
   margin-left: 12px;
 }
 
-/*# sourceMappingURL=accountLogin.css.map */
+/*# sourceMappingURL=accountEdit.css.map */

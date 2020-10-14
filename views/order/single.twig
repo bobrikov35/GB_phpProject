@@ -1,0 +1,51 @@
+{% extends 'layouts/main.twig' %}
+
+{% block style %}
+    <link rel="stylesheet" href="/css/cart.css?t={{ time }}">
+    <link rel="stylesheet" href="/css/orderSingle.css?t={{ time }}">
+{% endblock %}
+
+{% block title %}Заказ №{{ order.id }}{% endblock %}
+
+{% block content %}
+
+    <div class="title">
+        <h2 class="title__text">Заказ №{{ order.id }}</h2>
+    </div>
+
+    {% if order.goods != [] %}
+
+        <div class="table">
+            <div class="table__row">
+                <div class="table__image table__head">Изображение</div>
+                <div class="table__id table__head">ID</div>
+                <div class="table__title table__head">Заголовок</div>
+                <div class="table__price table__head">Цена</div>
+                <div class="table__quantity table__head">Количество</div>
+                <div class="table__cost table__head">Общая стоимость</div>
+            </div>
+
+            {% for product in order.goods %}
+                <div class="table__row">
+                    <div class="table__image">
+                        <a href="/product/single/?id={{ product.id }}">
+                            <img src="{{ product.image }}" alt="product">
+                        </a>
+                    </div>
+                    <div class="table__id">{{ product.id }}</div>
+                    <div class="table__title">{{ product.title }}</div>
+                    <div class="table__price">{{ product.price }}<i class="fa fa-rub"></i></div>
+                    <div class="table__quantity">{{ product.quantity }}</div>
+                    <div class="table__cost">{{ product.price * product.quantity }}<i class="fa fa-rub"></i></div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <p class="message">В заказе нет товаров</p>
+
+    {% endif %}
+
+{% endblock %}

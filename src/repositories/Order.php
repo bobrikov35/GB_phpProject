@@ -148,12 +148,24 @@ class Order extends Repository
      */
     public function getSingle(int $id)
     {
-        $sql = "SELECT `id`, `status` FROM `{$this->getTableName()}` WHERE `id` = :id";
+        $sql = "SELECT `id`, `status`, `id_user` as `userId` FROM `{$this->getTableName()}` WHERE `id` = :id";
         $order = $this->readObject($sql, $this->getEntityName(), [':id' => $id]);
         if (!empty($order)) {
             $this->fetchGoods($order);
         }
         return $order;
+    }
+
+    /**
+     * Возвращает заказ из базы данных по id
+     *
+     * @param int $id
+     * @return EOrder|Entity|null
+     */
+    public function getSingleWithoutGoods(int $id)
+    {
+        $sql = "SELECT `id`, `status`, `id_user` as `userId` FROM `{$this->getTableName()}` WHERE `id` = :id";
+        return $this->readObject($sql, $this->getEntityName(), [':id' => $id]);
     }
 
     /**
@@ -175,6 +187,17 @@ class Order extends Repository
         return $this->readObjectList($sql, $this->getEntityName(), [':id' => $user['id']]);
     }
 
+    /**
+     * Отменяет заказ
+     *
+     * @param EOrder $order
+     * @return bool
+     */
+    public function cancel(EOrder $order): bool
+    {
+        return $this->update($order, 'Отменен');
+    }
+
 
     /**
      * П Р И В А Т Н Ы Е   Ф У Н К Ц И И
@@ -191,10 +214,9 @@ class Order extends Repository
         if (empty($cart = $this->getCart())) {
             return 0;
         }
-        $user = $this->getUser();
         $sql = "INSERT INTO `{$this->getTableName()}` (`id_user`, `status`) VALUES (:id_user, :status)";
         $result = $this->execute($sql, [
-            ':id_user' => $user['id'],
+            ':id_user' => $order->getUserId(),
             ':status' => $order->getStatus(),
         ]);
         if (empty($result) or empty($id = $this->getInsertedId())) {
@@ -217,11 +239,12 @@ class Order extends Repository
      * Изменяет состояние заказа в базе данных
      *
      * @param EOrder|Entity $order
+     * @param string $status
      * @return bool
      */
-    protected function update(Entity $order): bool
+    protected function update(Entity $order, string $status = ''): bool
     {
-        $newStatus = $this->getPost('status');
+        $newStatus = $status == '' ? $this->getPost('status') : $status;
         if (empty($newStatus) or $order->getStatus() == $newStatus or !in_array($newStatus, $this->getStatuses())) {
             return false;
         }

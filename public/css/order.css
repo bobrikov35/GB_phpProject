@@ -1,0 +1,67 @@
+@font-face {
+  font-family: "Huntsman";
+  src: url("../fonts/Huntsman.otf");
+}
+@font-face {
+  font-family: "Exo";
+  src: url("../fonts/Exo.otf");
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("../fonts/OpenSans.ttf");
+}
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 42px;
+}
+.title__text {
+  font-size: 32px;
+}
+
+.message {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.table {
+  font-size: 18px;
+}
+.table__column {
+  width: 132px;
+  text-align: center;
+  border-bottom: 1px solid rgba(225, 225, 225, 0.7);
+  padding: 12px;
+}
+.table__column:first-child {
+  width: 88px;
+}
+.table__column:last-child {
+  width: 132px;
+  border-bottom: 1px solid rgba(225, 225, 225, 0.7);
+}
+.table__price {
+  text-align: right;
+}
+.table__status {
+  width: 484px;
+}
+.table__control {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.table__link {
+  color: #696969;
+  font-size: 28px;
+  margin-right: 14px;
+}
+.table__link:last-child {
+  margin-right: 0;
+}
+.table__link_red {
+  color: indianred;
+}
+
+/*# sourceMappingURL=order.css.map */

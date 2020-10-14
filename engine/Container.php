@@ -3,8 +3,8 @@
 namespace app\engine;
 
 use app\services\{DB, RendererTemplate, Request, Paginator};
-use app\controllers\{Cart as CCart, Home, Product as CProduct};
-use app\repositories\{Product as RProduct, User as RUser};
+use app\controllers\{Cart as CCart, Home, Order as COrder, Product as CProduct};
+use app\repositories\{Order as ROrder, Product as RProduct, User as RUser};
 use app\services\{Authorization, Cart as SCart, Product as SProduct, User as SUser};
 
 
@@ -20,8 +20,10 @@ use app\services\{Authorization, Cart as SCart, Product as SProduct, User as SUs
  *
  * @property CCart $controllerCart
  * @property Home $controllerHome
+ * @property COrder $controllerOrder
  * @property CProduct $controllerProduct
  *
+ * @property ROrder $repositoryOrder
  * @property RProduct $repositoryProduct
  * @property RUser $repositoryUser
  *
